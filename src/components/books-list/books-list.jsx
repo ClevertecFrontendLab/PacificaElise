@@ -1,7 +1,10 @@
+/* eslint-disable */
+
 import { useEffect, useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux'
 import { loadBooks } from '../../store/books/books-actions';
-import { selectAllBooks, selectBooksInfo } from '../../store/books/books-selectors';
+import { selectVisibleAllBooks, selectBooksInfo } from '../../store/books/books-selectors';
+import { selectSearch } from '../../store/controls/controls-selectors';
 import { BookCard } from '../book-card/book-card';
 import { Navigation } from '../navigation/navigation';
 
@@ -9,7 +12,8 @@ import './books-list.scss';
 
 export const BooksList = () => {
   const dispatch = useDispatch();
-  const books = useSelector(selectAllBooks);
+  const search = useSelector(selectSearch);
+  const books = useSelector(state => selectVisibleAllBooks(state, {search}));
   const {status, error, qty} = useSelector(selectBooksInfo);
 
   useEffect(() => {
@@ -17,6 +21,7 @@ export const BooksList = () => {
       dispatch(loadBooks());
     }
   }, [qty, dispatch])
+
 
   const [choosenView, setChoosenView] = useState();
 

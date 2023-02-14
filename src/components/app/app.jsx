@@ -1,4 +1,7 @@
+/* eslint-disable */
+
 import { Route, Routes, Navigate} from 'react-router-dom';
+
 import { Layout } from '../layout/layout';
 import { LayoutMainPage } from '../../pages/layout-main-page';
 import { UseTerms } from '../../pages/terms';

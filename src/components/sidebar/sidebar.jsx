@@ -10,14 +10,16 @@ import {ReactComponent as Arrow} from '../../imgs/icons/arrow.svg';
 import {setDropdown} from '../../store/dropdown/dropdown-actions'
 
 import './sidebar.scss';
+import { selectCategory } from '../../store/controls/controls-selectors';
+import { setCategory } from '../../store/controls/controls-actions';
 
 export const Sidebar = () => {
   const dispatch = useDispatch();
   const dropdown = useSelector(state => state.dropdown);
 
-  const books = useSelector(selectAllBooks);
-  const bookCategories = useSelector(selectAllCategories);
+  const categories = useSelector(selectAllCategories);
   const {status, error, qty} = useSelector(selectCategoriesInfo);
+  const category = useSelector(selectCategory);
 
   useEffect(() => {
     if (!qty) {
@@ -26,7 +28,11 @@ export const Sidebar = () => {
 
 
   const toogleDropdown = () => {
-    dispatch(setDropdown( dropdown === false ? true : false))
+    dispatch(setDropdown(dropdown === false ? true : false))
+  };
+
+  const handleSelectCategory = (e) => {
+    dispatch(setCategory(e.target.innerText))
   }
 
   return (
@@ -45,17 +51,11 @@ export const Sidebar = () => {
                 <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to='/books/all' data-test-id='navigation-books'>Все книги</NavLink>
               </li>
               {
-                bookCategories.map(category => 
+                categories.map(category => 
                   <li className='sidebar-category' key={category.id}>
-                    <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to={`/books/${category.path}`}>
+                    <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to={`/books/${category.path}`} onClick={handleSelectCategory}>
                     {category.name}
-                      <span> {
-                      bookCategories.map((category) => books
-                      .filter((book) => (book.category === category)))
-                      .flat()
-                      .filter((item)=>item.category === category).length
-                      }</span>
-                    </NavLink>
+                    </NavLink> <span>0</span>
                   </li>
                 )
               }
@@ -78,3 +78,10 @@ export const Sidebar = () => {
   )
 };
 
+/* {
+                      bookCategories.map((category) => books
+                      .filter((book) => (book.category === category)))
+                      .flat()
+                      .filter((item)=>item.category === category).length
+                      }
+                      */

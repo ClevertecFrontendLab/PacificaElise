@@ -10,8 +10,8 @@ import nocover from '../../imgs/nocover.jpg';
 import './book-card.scss';
 
 export const BookCard = (props) => {
-  const dispatch = useDispatch();
-  const bookCategories = useSelector(selectAllCategories);
+  // const dispatch = useDispatch();
+  // const bookCategories = useSelector(selectAllCategories);
 
   const { 
     id, 
