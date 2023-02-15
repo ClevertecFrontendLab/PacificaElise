@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import axios from 'axios';
 
 import { createStore, compose, applyMiddleware } from 'redux';

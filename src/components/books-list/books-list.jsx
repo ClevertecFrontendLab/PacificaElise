@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux'
 import { loadBooks } from '../../store/books/books-actions';
-import { selectVisibleAllBooks, selectBooksInfo } from '../../store/books/books-selectors';
-import { selectSearch } from '../../store/controls/controls-selectors';
+import { selectVisibleBooks, selectBooksInfo } from '../../store/books/books-selectors';
+import { selectControls } from '../../store/controls/controls-selectors';
 import { BookCard } from '../book-card/book-card';
 import { Navigation } from '../navigation/navigation';
 
@@ -12,16 +12,15 @@ import './books-list.scss';
 
 export const BooksList = () => {
   const dispatch = useDispatch();
-  const search = useSelector(selectSearch);
-  const books = useSelector(state => selectVisibleAllBooks(state, {search}));
-  const {status, error, qty} = useSelector(selectBooksInfo);
+  const {search, category, path} = useSelector(selectControls);
+  const books = useSelector(state => selectVisibleBooks (state, {search, category}));
+  const {status, qty} = useSelector(selectBooksInfo);
 
   useEffect(() => {
     if (!qty) {
       dispatch(loadBooks());
     }
-  }, [qty, dispatch])
-
+  }, [qty, dispatch]);
 
   const [choosenView, setChoosenView] = useState();
 
@@ -31,8 +30,6 @@ export const BooksList = () => {
 
   return (
         <>
-          {error && <h1>Error...</h1>}
-          {status === 'loading' && <h1>Loading...</h1>}
           {status === 'received' && (
           <section className='booklist-container'>          
           <Navigation onChangeView={ handleChangeView }/>
@@ -42,6 +39,8 @@ export const BooksList = () => {
                   books.map((book) => <BookCard 
                   key={book.id} 
                   {...book} 
+                  path={path}
+                  category={category}
                   choosenView={choosenView}/>)
                 ) : (
                   <h4>Nothing found</h4>

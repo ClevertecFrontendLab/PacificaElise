@@ -1,6 +1,6 @@
+/* eslint-disable */
+
 import { NavLink } from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import { selectAllCategories } from '../../store/categories/categories-selectors';
 import {BASE_URL} from '../../config';
 
 import { Rating } from '../raiting/raiting';
@@ -10,14 +10,13 @@ import nocover from '../../imgs/nocover.jpg';
 import './book-card.scss';
 
 export const BookCard = (props) => {
-  // const dispatch = useDispatch();
-  // const bookCategories = useSelector(selectAllCategories);
 
   const { 
     id, 
     image = {}, 
     title, 
-    categories = [], 
+    category, 
+    path,
     authors = [], 
     issueYear, 
     rating, 
@@ -26,7 +25,7 @@ export const BookCard = (props) => {
 
 
   return (
-    <NavLink to={`/books/${categories}/${id}`} data-test-id='card' className={choosenView === 1 ? 'book-card-list' : 'book-card'}>
+    <NavLink to={`/books/${path}/${id}`} data-test-id='card' className={choosenView === 1 ? 'book-card-list' : 'book-card'}>
       <div className='image-container'>
         {(image === null) ? (
           <img

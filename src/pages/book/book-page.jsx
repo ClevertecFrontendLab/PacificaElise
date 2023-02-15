@@ -1,7 +1,10 @@
+/* eslint-disable */
 
 import { NavLink, useParams } from "react-router-dom";
-import { useContext,useState } from 'react';
-import { CustomContex } from '../../context';
+import { useEffect,useState } from 'react';
+
+import { useDispatch, useSelector } from "react-redux";
+
 import { Button } from '../../components/button/button';
 import { Rating } from '../../components/raiting/raiting';
 import { SliderNavigation } from '../../components/slider/slider-navigation';
@@ -16,25 +19,37 @@ import nocover from '../../imgs/nocover.jpg';
 import user from '../../imgs/user.jpg';
 
 import './book-page.scss';
+import { selectBookDetails } from "../../store/book-details/book-details-selectors";
+import { loadBookById } from "../../store/book-details/book-details-actions";
 
 export const BookPage = () => {
     const { bookId } = useParams();
-    const { books = [] } = useContext(CustomContex);
-    const book = books.filter((book) => book.id === bookId);
+    const { bookCategory } = useParams();
+
+    const dispatch = useDispatch();
+    const { error, status, currentBook } = useSelector(selectBookDetails);
     const { isScreenMd } = useResize();
     const  [isOpenDropdownComments, setOpenDropdownComments] = useState(true);
 
+    useEffect(() => {
+      dispatch(loadBookById())
+    }, [bookId, dispatch])
+
     return (
+      <>
+        {error && <h1>Error...</h1>}
+        {status === 'loading' && <h1>Loading...</h1>}
+        {status === 'received' && (
         <section className='book-page'>
           <div className='book-path'>
-            <span><NavLink to={`/books/${book[0].category}`}>{book[0].category}</NavLink>  &#160;/ &#160; {book[0].title}</span>
+            <span><NavLink to={`/books/${bookCategory}`}>{bookCategory}</NavLink>  &#160;/ &#160; {currentBook.title}</span>
           </div>
           <section className='book-description'>
-              {book[0].images.length ?
+              {currentBook.image.length ?
               <div className='image-container'>
                 {isScreenMd ?
-                  <SliderPagination images={book[0].images}/> :
-                  <SliderNavigation images={book[0].images}/>
+                  <SliderPagination images={Object.values(currentBook.image)}/> :
+                  <SliderNavigation images={Object.values(currentBook.image)}/>
                 }
               </div> :
               <div className='image-container'>
@@ -46,19 +61,19 @@ export const BookPage = () => {
               </div>
               }
               <div className='description-title-container'>
-                <h2 className='description-title'>{book[0].title}</h2>
-                <p className='description-author'>{book[0].author}, {book[0].year}</p>
+                <h2 className='description-title'>{currentBook.title}</h2>
+                <p className='description-author'>{currentBook.authors}, {currentBook.issueYear}</p>
                 <Button className='description-title-container-btn'/>
               </div>
               <div className='description-about'>
                 <h4>О книге</h4>
-                <p>{book[0].about}</p>
+                <p>{currentBook.description}</p>
               </div>
           </section>
           <section className='book-feedback-container'>
             <div className="book-raiting-container ">
               <h4 className='raiting-title'>Рейтинг</h4>
-              <div className='raiting'><Rating /><h4>{book[0].rating}</h4></div>
+              <div className='raiting'><Rating /><h4>{currentBook.rating}</h4></div>
             </div>
             <div className='book-detailed-container'>
               <h4 className='detailed-title'>Подробная информация</h4>
@@ -72,11 +87,11 @@ export const BookPage = () => {
                     <p>Формат</p>
                   </div>
                   <div className='detailed-column-values'>
-                    <p>{book[0].published}</p>
-                    <p>{book[0].year}</p>
-                    <p>{book[0].pages}</p>
-                    <p>{book[0].binding}</p>
-                    <p>{book[0].format}</p>
+                    <p>{currentBook.publish}</p>
+                    <p>{currentBook.issueYear}</p>
+                    <p>{currentBook.pages}</p>
+                    <p>{currentBook.cover}</p>
+                    <p>{currentBook.format}</p>
                   </div>
                 </div>
                 <div className='detailed-column'>
@@ -87,10 +102,10 @@ export const BookPage = () => {
                     <p>Изготовитель</p>
                   </div>
                   <div className='detailed-column-values'>
-                    <p>{book[0].category}</p>
-                    <p>{book[0].weight}</p>
-                    <p>{book[0].ISBN}</p>
-                    <p>{book[0].manufacturer}</p>
+                    <p>{currentBook.categories}</p>
+                    <p>{currentBook.weight}</p>
+                    <p>{currentBook.ISBN}</p>
+                    <p>{currentBook.producer}</p>
                   </div>
               </div>
               </div>
@@ -131,7 +146,8 @@ export const BookPage = () => {
               <button type='submit' className='grade-btn' data-test-id='button-rating'>оценить книгу</button>
             </div>
           </section>
-        </section>
+        </section>)}
+      </>
 )};
 
  /* {book[0].images.length === 0 ? (

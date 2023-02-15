@@ -9,11 +9,11 @@ export const selectBooksInfo = (state) => ({
 export const selectAllBooks = (state) => state.books.list;
 
 export const selectVisibleBooks = (state, { search = '', category = '' }) => {
-  return state.books.list.filter(
-    (book) => book.title.toLowerCase().includes(search.toLowerCase()) && book.categories.includes(category)
-  );
-};
-
-export const selectVisibleAllBooks = (state, { search = '' }) => {
-  return state.books.list.filter((book) => book.title.toLowerCase().includes(search.toLowerCase()));
+  if (category === 'Все книги') {
+    return state.books.list;
+  } else {
+    return state.books.list.filter(
+      (book) => book.title.toLowerCase().includes(search.toLowerCase()) && book.categories.toString().includes(category)
+    );
+  }
 };

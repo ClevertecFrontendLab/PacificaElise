@@ -10,7 +10,6 @@ import { BookPage } from '../../pages/book';
 import { ProfilePage } from '../../pages/profile-page';
 import { NotFoundPage } from '../../pages/not-found-page';
 import { BooksList } from '../books-list/books-list';
-import { CategoryBooksList } from '../category-books-list/category-books-list';
 import { Context } from '../../context';
 
 export const App = () => (
@@ -19,8 +18,7 @@ export const App = () => (
       <Route path='/' element={<Layout />}>
       <Route path='/' element={<Navigate to='/books/all'/>}/>
         <Route path='books/' element={<LayoutMainPage />}>
-            <Route path='all' element={<BooksList />} />
-            <Route path=':bookCategory' element={<CategoryBooksList />} />
+            <Route path=':bookCategory' element={<BooksList />} />
             <Route path='terms' element={<UseTerms />} />
             <Route path='contract' element={<ContractOffer />} />
         </Route>

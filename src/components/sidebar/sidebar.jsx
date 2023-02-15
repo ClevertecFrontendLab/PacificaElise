@@ -1,8 +1,7 @@
 /* eslint-disable */
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import { selectAllBooks } from '../../store/books/books-selectors';
 import { loadCategories } from '../../store/categories/categories-actions';
 import { selectAllCategories, selectCategoriesInfo } from '../../store/categories/categories-selectors'
 
@@ -10,30 +9,37 @@ import {ReactComponent as Arrow} from '../../imgs/icons/arrow.svg';
 import {setDropdown} from '../../store/dropdown/dropdown-actions'
 
 import './sidebar.scss';
-import { selectCategory } from '../../store/controls/controls-selectors';
-import { setCategory } from '../../store/controls/controls-actions';
+import { setCategory, setPath } from '../../store/controls/controls-actions';
+import { selectAllBooks, selectBooksInfo } from '../../store/books/books-selectors';
 
 export const Sidebar = () => {
   const dispatch = useDispatch();
+  const books = useSelector(selectAllBooks);
   const dropdown = useSelector(state => state.dropdown);
 
   const categories = useSelector(selectAllCategories);
-  const {status, error, qty} = useSelector(selectCategoriesInfo);
-  const category = useSelector(selectCategory);
+  const {status, qty} = useSelector(selectCategoriesInfo);
+  const {error} = useSelector(selectBooksInfo);
 
   useEffect(() => {
     if (!qty) {
-      dispatch(loadCategories());    }
+      dispatch(loadCategories());    
+    };
   }, [qty, dispatch])
-
 
   const toogleDropdown = () => {
     dispatch(setDropdown(dropdown === false ? true : false))
   };
 
-  const handleSelectCategory = (e) => {
-    dispatch(setCategory(e.target.innerText))
-  }
+  const handleSelectCategory = (category) => {
+    dispatch(setCategory(category));
+  } 
+
+  const handleSelectPath = (path) => {
+    dispatch(setPath(path))
+  } 
+
+  const bookCategories = books.map(book => book.categories).flat();
 
   return (
     <aside className='sidebar'>
@@ -41,21 +47,26 @@ export const Sidebar = () => {
           <li className={dropdown ? 'sidebar-title underline' : 'sidebar-title'}>
             <NavLink className={dropdown ? 'active-link' : ''} onClick={toogleDropdown} to='/books/all' data-test-id='navigation-showcase'>Витрина книг
             </NavLink>
-            <button type='button' aria-label='dropdownMenu' onClick={toogleDropdown}><Arrow className={dropdown ? 'arrow-up' : ''}/></button>
+            {!error && (
+              <button type='button' aria-label='dropdownMenu' onClick={toogleDropdown}><Arrow className={dropdown ? 'arrow-up' : ''}/></button>
+              )
+            }
           </li>
-          {error && <h1>Error...</h1>}
-          {status === 'loading' && <h1>Loading...</h1>}
           {status === 'received' && (
             <ul className={dropdown ? 'sidebar-categories' : 'sidebar-categories-not-visible'}>
               <li className='sidebar-category'>
-                <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to='/books/all' data-test-id='navigation-books'>Все книги</NavLink>
+                <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to='/books/all' data-test-id='navigation-books' onClick={(e) => handleSelectCategory(e.target.innerText)}>Все книги</NavLink>
               </li>
               {
                 categories.map(category => 
-                  <li className='sidebar-category' key={category.id}>
-                    <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to={`/books/${category.path}`} onClick={handleSelectCategory}>
+                  <li className='sidebar-category' key={category.id} path={category.path}>
+                    <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to={`/books/${category.path}`} onClick={(e) => {{handleSelectCategory(e.target.innerText)}; handleSelectPath(category.path)}}>
                     {category.name}
-                    </NavLink> <span>0</span>
+                    </NavLink> 
+                    <span> {
+                      bookCategories.length === 0 ? '' : bookCategories.filter(bookCategory => category.name === bookCategory).length
+                      }
+                    </span>
                   </li>
                 )
               }
@@ -65,7 +76,7 @@ export const Sidebar = () => {
             onClick={() => {
             toogleDropdown
             }} data-test-id='navigation-terms'>
-              <li>Правила пользования </li>
+              <li>Правила пользования</li>
             </NavLink>
             <NavLink className={({isActive}) => isActive ? 'active-link-underline' : ''} to='/books/contract' 
             onClick={() => {
@@ -78,8 +89,11 @@ export const Sidebar = () => {
   )
 };
 
-/* {
-                      bookCategories.map((category) => books
+/*
+words.filter(word => word.length > 6);
+                      books.categories.find()
+                    {category.name}
+                      {categories.map((category) => books
                       .filter((book) => (book.category === category)))
                       .flat()
                       .filter((item)=>item.category === category).length
