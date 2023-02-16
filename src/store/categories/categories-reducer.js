@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { SET_CATEGORIES, SET_ERROR, SET_LOADING } from './categories-actions';
 
 const initialState = {

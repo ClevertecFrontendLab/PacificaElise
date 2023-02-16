@@ -1,10 +1,8 @@
-/* eslint-disable */
-
-import { SET_SEARCH, SET_CATEGORY, CLEAR_CONTROLS, SET_PATH } from './controls-actions';
+import { CLEAR_CONTROLS, SET_CATEGORY, SET_PATH, SET_SEARCH } from './controls-actions';
 
 const initialState = {
   search: '',
-  category: '',
+  category: 'Все книги',
   path: 'all',
 };
 

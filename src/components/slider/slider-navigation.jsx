@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs } from 'swiper';
+import {BASE_URL} from '../../config'
 
 
 import 'swiper/css';
@@ -13,7 +14,7 @@ import './slider-navigation.scss';
 
 export const SliderNavigation = ({images}) => {
   const [thumbsSwiper, setThumbsSwiper] = useState('');
-  
+
   return(
   <React.Fragment>
     <Swiper className='slider-navigation' data-test-id='slide-big'
@@ -25,8 +26,8 @@ export const SliderNavigation = ({images}) => {
     >
       {
         images.map((image) => (
-          <SwiperSlide key={image}>
-            <img src={image} alt='cover book'/>
+          <SwiperSlide key={image.url}>
+            <img src={BASE_URL+Object.values(image)} alt='cover book'/>
           </SwiperSlide>
         ))
       }
@@ -44,8 +45,8 @@ export const SliderNavigation = ({images}) => {
       >
       {
         images.map((image) => (
-          <SwiperSlide key={image} data-test-id='slide-mini'>
-            <img src={image} alt='cover book' />
+          <SwiperSlide key={image.url} data-test-id='slide-mini'>
+            <img src={BASE_URL+Object.values(image)} alt='cover book' />
           </SwiperSlide>
         ))
       }

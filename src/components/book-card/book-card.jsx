@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { NavLink } from 'react-router-dom';
 import {BASE_URL} from '../../config';
 
@@ -13,9 +11,8 @@ export const BookCard = (props) => {
 
   const { 
     id, 
-    image = {}, 
+    image = {},
     title, 
-    category, 
     path,
     authors = [], 
     issueYear, 
@@ -48,7 +45,7 @@ export const BookCard = (props) => {
             </p>
           </div>
           <p className='book-author'>
-              {authors}, <span>{issueYear}</span>
+              {authors.join(', ')}, <span>{issueYear}</span>
           </p>
         </div>
         <Button onClick={e => e.stopPropagation()}/>

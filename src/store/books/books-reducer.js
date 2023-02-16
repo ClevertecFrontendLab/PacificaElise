@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { SET_BOOKS, SET_ERROR, SET_LOADING } from './books-actions';
 
 const initialState = {

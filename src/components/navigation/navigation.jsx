@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as Tile } from '../../imgs/icons/tile.svg';

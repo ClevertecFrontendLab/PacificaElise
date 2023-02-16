@@ -1,12 +1,10 @@
-/* eslint-disable */
-
+import { applyMiddleware,compose, createStore } from 'redux';
+import thunk from 'redux-thunk';
 import axios from 'axios';
 
-import { createStore, compose, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+import * as api from '../config';
 
 import { rootReducer } from './root-reducer';
-import * as api from '../config';
 
 const composeEnhanser = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

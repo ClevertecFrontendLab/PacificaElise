@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {ReactComponent as Star} from '../../imgs/star.svg';
 
 import './raiting.scss';

@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import logo from '../../imgs/logo.svg';

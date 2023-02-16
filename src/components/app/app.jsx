@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { Route, Routes, Navigate} from 'react-router-dom';
 
 import { Layout } from '../layout/layout';

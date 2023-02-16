@@ -1,8 +1,7 @@
-/* eslint-disable */
-
 export const SET_LOADING = '@@book-details/SET_LOADING';
 export const SET_ERROR = '@@book-details/SET_ERROR';
 export const SET_BOOK = '@@book-details/SET_BOOK';
+export const CLEAR_DETAILS = '@@book-details/CLEAR_DETAILS';
 
 export const setLoading = () => ({
   type: SET_LOADING,
@@ -18,6 +17,10 @@ export const setBook = (book) => ({
   payload: book,
 });
 
+export const clearDetails = () => ({
+  type: CLEAR_DETAILS,
+});
+
 export const loadBookById =
   (id) =>
   (dispatch, _, { client, api }) => {
@@ -25,6 +28,5 @@ export const loadBookById =
     client
       .get(api.searchByBook(id))
       .then(({ data }) => dispatch(setBook(data)))
-      .then(console.log(data))
       .catch((err) => dispatch(setError(err.message)));
   };

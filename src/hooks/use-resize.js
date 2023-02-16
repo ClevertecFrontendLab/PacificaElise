@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect,useState } from 'react';
 
 const SCREEN_SM = 576;
 const SCREEN_MD = 1000;
@@ -10,7 +10,9 @@ export const useResize = () => {
     const handleResize = (event) => {
       setWidth(event.target.innerWidth);
     };
+
     window.addEventListener('resize', handleResize);
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };

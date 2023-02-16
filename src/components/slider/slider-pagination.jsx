@@ -1,11 +1,13 @@
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper";
+
+import {BASE_URL} from '../../config'
 
 import "swiper/css";
 import "swiper/css/pagination";
 
 import './slider-pagination.scss';
 
-import { Pagination } from "swiper";
 
 export const SliderPagination = ({images}) => (
       <Swiper className='slider-pagination' data-test-id='slide-big'
@@ -14,8 +16,8 @@ export const SliderPagination = ({images}) => (
         >
         {
         images.map((image) => (
-          <SwiperSlide key={image} data-test-id='slide-mini'> 
-            <img src={image} alt='cover book'/>
+          <SwiperSlide key={image.url} data-test-id='slide-mini'> 
+            <img src={BASE_URL+Object.values(image)} alt='cover book'/>
           </SwiperSlide>
         ))
       }

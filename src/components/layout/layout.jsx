@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { Header } from '../header/header';
@@ -10,11 +9,12 @@ import { ErrorToast } from '../../error-toast/error-toast';
 
 export const Layout = () => {
 const {status, error} = useSelector(selectBooksInfo);
+
 return (
     <div className='layout-container'>
-      {status === 'loading' && <h1>Loading...</h1>}
-      {error && <ErrorToast />}
       <Header />
+      {status === 'loading' && <h1>Loading...</h1>}
+      {error === null ? null : <ErrorToast />}
         <Outlet />
       <Footer />
     </div>

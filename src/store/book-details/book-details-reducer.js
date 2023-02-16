@@ -1,6 +1,4 @@
-/* eslint-disable */
-
-import { SET_BOOK, SET_ERROR, SET_LOADING } from './book-details-actions';
+import { SET_BOOK, SET_ERROR, SET_LOADING, CLEAR_DETAILS } from './book-details-actions';
 
 const initialState = {
   currentBook: null,
@@ -25,9 +23,11 @@ export const bookDetailsReducer = (state = initialState, { type, payload }) => {
     case SET_BOOK:
       return {
         ...state,
-        error: null,
+        status: 'received',
         currentBook: payload,
       };
+    case CLEAR_DETAILS:
+      return initialState;
     default:
       return state;
   }

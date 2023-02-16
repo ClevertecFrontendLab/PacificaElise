@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 export const SET_SEARCH = '@@controls/SET_SEARCH';
 export const SET_CATEGORY = '@@controls/SET_CATEGORY';
 export const SET_PATH = '@@controls/SET_PATH';
