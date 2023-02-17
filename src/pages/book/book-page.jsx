@@ -31,7 +31,7 @@ export const BookPage = () => {
     const {errorBookId, statusBookId} = useSelector(selectDetailsInfo)
     const { category, path} = useSelector(selectControls);
     const { isScreenMd } = useResize();
-    const  [isOpenDropdownComments, setOpenDropdownComments] = useState(true);
+    const [isOpenDropdownComments, setOpenDropdownComments] = useState(true);
     
     useEffect(() => {
       dispatch(loadBookById(bookId));

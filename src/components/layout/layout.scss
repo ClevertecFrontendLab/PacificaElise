@@ -1,4 +1,11 @@
-
+.loader {
+  position: absolute;
+  z-index: 1500;
+  top: 300px;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+}  
 
 .layout-container{
   width: 100%;
@@ -6,15 +13,6 @@
   margin-top: 32px;
   display: flex;
   flex-direction: column;
-  
-  .loader {
-    position: absolute;
-    z-index: 1500;
-    top: 50%;
-    left: 50%;
-    width: 70px;
-    height: 70px;
-  }  
 }
 
 .layout-wrapper{
@@ -33,7 +31,6 @@
   min-height: 100vh;
   background: rgba(54, 54, 54, 0.3);
   filter: blur(10px);
-  margin: 0;
   margin-top: -32px;
   justify-content: center;
   align-items: center;
@@ -42,6 +39,10 @@
 @media (max-width: 1000px) {
   .layout-container{
     margin: 0px;
+  }
+
+  .blur {
+    margin-top: 0;
   }
 }
 

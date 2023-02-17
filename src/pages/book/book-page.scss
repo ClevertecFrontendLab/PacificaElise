@@ -670,7 +670,7 @@
           }
     
           .user-profile {
-            width: 157px;
+            width: 204px;
             height: 52px;
             display: grid;
             grid-template-areas: 
@@ -687,12 +687,12 @@
             line-height: 1.33;
 
             .user-name {
-              min-width: 110px;
+              min-width: 154px;
               grid-area: name;
             }
 
             .user-date {
-              min-width: 110px;
+              min-width: 154px;
               grid-area: date;
             }      
     

@@ -18,7 +18,7 @@ export const Sidebar = () => {
   const {statusCat, errorCat} = useSelector(selectCategoriesInfo);
   const {error, status} = useSelector(selectBooksInfo);
 
-  const [dropdown, setDropdown] = useState(errorCat || error ||  status === 'loading' || statusCat === 'loading' ? false : true);
+  const [dropdown, setDropdown] = useState(true);
 
   const removeErrorToast = () => dispatch(setToogleErrorToast(false))
 
@@ -31,6 +31,13 @@ export const Sidebar = () => {
       dispatch(loadCategories()); 
     };
   }, [qty, dispatch]);
+
+  useEffect(() => {
+    if (errorCat || error || status === 'idle' || statusCat === 'idle') 
+    {
+      setDropdown(false)
+    } else setDropdown(true)
+  }, [errorCat, error, status, statusCat]);
 
   const handleSelectCategory = (category) => {
     dispatch(setCategory(category));
@@ -45,12 +52,12 @@ export const Sidebar = () => {
   return (
     <aside className='sidebar'>
         <ul className='sidebar-list'>
-          <li className={dropdown && status !== 'idle' ? 'sidebar-title underline' : 'sidebar-title'}>
-            <NavLink className={dropdown && status !== 'idle' ? 'active-link' : ''} onClick={toogleDropdown} to='/books/all' data-test-id='navigation-showcase'>Витрина книг
+          <li className={dropdown ? 'sidebar-title underline' : 'sidebar-title'}>
+            <NavLink className={dropdown ? 'active-link' : ''} onClick={toogleDropdown} to='/books/all' data-test-id='navigation-showcase'>Витрина книг
             </NavLink>
             {errorCat || error || statusCat === 'loading' || status === 'loading' ? 
               null : (
-                <button type='button' aria-label='dropdownMenu' onClick={() => toogleDropdown()}><Arrow className={dropdown && status !== 'idle' ? 'arrow-up' : ''}/></button>
+                <button type='button' aria-label='dropdownMenu' onClick={() => toogleDropdown()}><Arrow className={dropdown ? 'arrow-up' : ''}/></button>
                 )
             }
           </li>
