@@ -1,7 +1,12 @@
+.loader-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
 .loader {
   position: absolute;
   z-index: 1500;
-  top: 300px;
+  top: 400px;
   left: 50%;
   width: 70px;
   height: 70px;

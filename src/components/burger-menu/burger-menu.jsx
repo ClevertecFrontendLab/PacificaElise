@@ -44,13 +44,7 @@ export const BurgerMenu = () => {
       document.body.style.overflow = 'auto'
     }
   }
-
-  useEffect(() => {
-    if (!qty) {
-      dispatch(loadCategories());
-    };
-  }, [qty, dispatch]);
-
+  
   useEffect(() => {
     if (errorCat || error) {
       setToggleMenu(true)

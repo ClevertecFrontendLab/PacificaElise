@@ -13,9 +13,8 @@ import './sidebar.scss';
 export const Sidebar = () => {
   const dispatch = useDispatch();
   const books = useSelector(selectAllBooks);
-  const {qty} = useSelector(selectCategoriesInfo);
   const categories = useSelector(selectAllCategories);
-  const {statusCat, errorCat} = useSelector(selectCategoriesInfo);
+  const {statusCat, errorCat, qty} = useSelector(selectCategoriesInfo);
   const {error, status} = useSelector(selectBooksInfo);
 
   const [dropdown, setDropdown] = useState(true);
