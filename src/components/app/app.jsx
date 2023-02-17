@@ -8,10 +8,8 @@ import { BookPage } from '../../pages/book';
 import { ProfilePage } from '../../pages/profile-page';
 import { NotFoundPage } from '../../pages/not-found-page';
 import { BooksList } from '../books-list/books-list';
-import { Context } from '../../context';
 
 export const App = () => (
-  <Context>
     <Routes>
       <Route path='/' element={<Layout />}>
       <Route path='/' element={<Navigate to='/books/all'/>}/>
@@ -25,5 +23,4 @@ export const App = () => (
       </Route>
       <Route path='*' element={<NotFoundPage />} />
     </Routes>
-  </Context>
   );

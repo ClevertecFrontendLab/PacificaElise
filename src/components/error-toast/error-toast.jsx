@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import warning from '../imgs/icons/warningCircle.svg';
+import { useSelector } from 'react-redux';
+
+import warning from '../../imgs/icons/warningCircle.svg';
 import './error-toast.scss';
 
 export const ErrorToast = () => {
   const [errorIsActive, setErrorIsActive] = useState(true);
+  const errorToast = useSelector(state => state.errorToast);
 
   return (
-    <div className={errorIsActive ?'error-toast' : 'not-visible'} data-test-id='error'>
+    <div className={errorToast===false || errorIsActive===false ? 'not-visible' : 'error-toast'} data-test-id='error'>
       <div className='image-container'>
         <img src={warning} alt='warning'/>
       </div>

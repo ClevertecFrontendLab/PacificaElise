@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import logo from '../../imgs/logo.svg';
-import { clearControls } from '../../store/controls/controls-actions';
+import { clearControls } from '../../features/controls/controls-slice';
 
 import './logo.scss';
 

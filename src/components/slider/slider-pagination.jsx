@@ -1,10 +1,10 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper';
 
 import {BASE_URL} from '../../config'
 
-import "swiper/css";
-import "swiper/css/pagination";
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 import './slider-pagination.scss';
 

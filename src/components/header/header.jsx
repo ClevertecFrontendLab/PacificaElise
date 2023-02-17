@@ -8,7 +8,7 @@ import './header.scss';
 export const Header = () => (
   <header className='header'>
       <div className='title-container'>
-          <BurgerMenu /> 
+         
           <Logo />
         <h1 className='title'>Библиотека</h1>
       </div>
@@ -18,3 +18,4 @@ export const Header = () => (
   </header>
 );
 
+//  <BurgerMenu /> 

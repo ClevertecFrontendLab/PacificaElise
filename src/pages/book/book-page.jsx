@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Comment } from '../../components/comment/comment'
 import { Button } from '../../components/button/button';
 import { Rating } from '../../components/raiting/raiting';
-import { ErrorToast } from '../../error-toast/error-toast';
+import { ErrorToast } from '../../components/error-toast/error-toast';
 import { SliderNavigation } from '../../components/slider/slider-navigation';
 import { SliderPagination } from '../../components/slider/slider-pagination';
 import { useResize } from '../../hooks/use-resize';
@@ -18,17 +18,17 @@ import {ReactComponent as Arrow} from '../../imgs/icons/arrow.svg';
 
 import nocover from '../../imgs/nocover.jpg';
 
-import { selectBookDetails } from '../../store/book-details/book-details-selectors';
-import { clearDetails, loadBookById } from '../../store/book-details/book-details-actions';
+import { selectBookDetails, clearDetails, loadBookById, selectDetailsInfo } from '../../features/details/details-slice';
 
 import './book-page.scss';
-import { selectControls } from '../../store/controls/controls-selectors';
+import { selectControls } from '../../features/controls/controls-slice';
 
 export const BookPage = () => {
     const { bookId } = useParams();
 
     const dispatch = useDispatch();
-    const { error, status, currentBook } = useSelector(selectBookDetails);
+    const { currentBook } = useSelector(selectBookDetails);
+    const {errorBookId, statusBookId} = useSelector(selectDetailsInfo)
     const { category, path} = useSelector(selectControls);
     const { isScreenMd } = useResize();
     const  [isOpenDropdownComments, setOpenDropdownComments] = useState(true);
@@ -45,9 +45,8 @@ export const BookPage = () => {
           <div className='book-path'>
             <span><NavLink to={`/books/${path}`}>{category}</NavLink>  &#160;/ &#160; {currentBook ?currentBook.title : ''}</span>
           </div>
-          {error && <ErrorToast />}
-          {status === 'loading' && <h1>Loading...</h1>}
-          {status === 'received' && (
+          {errorBookId && statusBookId !== 'loading' ? <ErrorToast /> : null}
+          {statusBookId === 'received' && (
           <React.Fragment>
             <section className='book-description'>
                 {currentBook.images === null ?

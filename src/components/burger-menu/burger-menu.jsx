@@ -5,20 +5,15 @@ import { useContext, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { CustomContex } from '../../context';
 import {ReactComponent as Arrow} from '../../imgs/icons/arrow.svg';
-import {setDropdown} from '../../store/dropdown/dropdown-actions'
 
 import './burger-menu.scss';
 
 export const BurgerMenu = () => { 
   const dispatch = useDispatch();
-  const dropdown = useSelector(state => state.dropdown);
+  const [dropdown, setDropdown] = useState(true);
   const [isToggleMenu, setToggleMenu] = useState(false);
   const [isHiddenScroll, setHiddenScroll] = useState(true);
   const { books = [], categories = [] } = useContext(CustomContex);
-
-  const toogleDropdown = () => {
-    dispatch(setDropdown( dropdown === true ? false : true))
-  }
 
   const hiddenScroll = () => {
     setHiddenScroll(!isHiddenScroll);
@@ -41,9 +36,9 @@ export const BurgerMenu = () => {
         onClick={() => setToggleMenu(false)} data-test-id='burger-navigation'>
           <ul className='menu-list' onClick={e => e.stopPropagation()}>
             <li className={dropdown ? 'menu-title underline' : 'menu-title'}>
-              <NavLink className={dropdown ? 'active-link' : ''} onClick={toogleDropdown} to='/books/all' data-test-id='burger-showcase'>Витрина книг
+              <NavLink className={dropdown ? 'active-link' : ''} to='/books/all' data-test-id='burger-showcase'>Витрина книг
               </NavLink>
-              <button type='button' className='dropdownBtn' aria-label='dropdownMenu' onClick={toogleDropdown}><Arrow className={dropdown ? 'arrow-up' : ''}/></button>
+              <button type='button' className='dropdownBtn' aria-label='dropdownMenu'><Arrow className={dropdown ? 'arrow-up' : ''}/></button>
             </li>
               <ul className={dropdown ? 'menu-categories' : 'menu-categories not-visible'}>
                 <li className='menu-category'>
@@ -66,35 +61,30 @@ export const BurgerMenu = () => {
                 }
               </ul>
               <NavLink className={({isActive}) => isActive ? 'active-link-underline' : ''} to='/books/terms' 
-              onClick={() => {
-              setToggleMenu(false);
-              toogleDropdown
-              }} data-test-id='burger-terms'>
+              onClick={
+              setToggleMenu(false)
+              } data-test-id='burger-terms'>
                 <li>Правила пользования</li>
               </NavLink>
               <NavLink className={({isActive}) => isActive ? 'active-link-underline' : ''} to='/books/contract' 
-              onClick={() => {
-              setToggleMenu(false);
-              toogleDropdown
-              }} data-test-id='burger-contract'>
+              onClick={
+              setToggleMenu(false)} data-test-id='burger-contract'>
                 <li>Договор оферты</li>
               </NavLink>
               <ul className='menu-profile'>
                 <li>
                   <NavLink className={({isActive}) => isActive ? 'active-link-underline' : ''} to='/profile' 
-                  onClick={() => {
-                  setToggleMenu(false);
-                  toogleDropdown
-                  }}>
+                  onClick={
+                  setToggleMenu(false)
+                 }>
                     Профиль
                   </NavLink>
                 </li>
                 <li>
                   <NavLink className={({isActive}) => isActive ? 'active-link-underline' : ''} to='*' 
-                  onClick={() => {
-                  setToggleMenu(false);
-                  toogleDropdown
-                  }}>
+                  onClick={
+                  setToggleMenu(false)
+                 }>
                     Выход
                   </NavLink>
                 </li>

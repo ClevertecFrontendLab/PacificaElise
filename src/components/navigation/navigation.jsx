@@ -4,9 +4,8 @@ import { ReactComponent as Tile } from '../../imgs/icons/tile.svg';
 import { ReactComponent as List } from '../../imgs/icons/list.svg';
 import { useResize } from '../../hooks/use-resize'
 
-import { selectSearch } from '../../store/controls/controls-selectors';
+import { selectSearch, setSearch } from '../../features/controls/controls-slice';
 import './navigation.scss';
-import { setSearch } from '../../store/controls/controls-actions';
 
 export const Navigation = ({onChangeView}) => {
 const dispatch = useDispatch();
