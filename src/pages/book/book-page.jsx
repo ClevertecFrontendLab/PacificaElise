@@ -21,7 +21,7 @@ import nocover from '../../imgs/nocover.jpg';
 import { selectBookDetails, clearDetails, loadBookById, selectDetailsInfo } from '../../features/details/details-slice';
 
 import './book-page.scss';
-import { selectControls } from '../../features/controls/controls-slice';
+import { clearSearch, selectControls } from '../../features/controls/controls-slice';
 
 export const BookPage = () => {
     const { bookId } = useParams();
@@ -33,17 +33,19 @@ export const BookPage = () => {
     const { isScreenMd } = useResize();
     const [isOpenDropdownComments, setOpenDropdownComments] = useState(true);
     
+
     useEffect(() => {
       dispatch(loadBookById(bookId));
       return () => {
-        dispatch(clearDetails())
+        dispatch(clearDetails());
+        dispatch(clearSearch())
       }
     }, [bookId, dispatch]);
 
     return (
         <section className='book-page'>
           <div className='book-path'>
-            <span><NavLink to={`/books/${path}`}>{category}</NavLink>  &#160;/ &#160; {currentBook ?currentBook.title : ''}</span>
+            <span><NavLink to={`/books/${path}`} data-test-id='breadcrumbs-link'>{category}</NavLink>  &#160;/ &#160; <span data-test-id='book-name'>{currentBook ? currentBook.title : ''}</span></span>
           </div>
           {errorBookId && statusBookId !== 'loading' ? <ErrorToast /> : null}
           {statusBookId === 'received' && (
@@ -65,7 +67,7 @@ export const BookPage = () => {
                   </div>
                 }
                 <div className='description-title-container'>
-                  <h2 className='description-title'>{currentBook.title}</h2>
+                  <h2 className='description-title' data-test-id='book-title'>{currentBook.title}</h2>
                   <p className='description-author'>{currentBook.authors.join(', ')}, {currentBook.issueYear}</p>
                   <Button className='description-title-container-btn'/>
                 </div>
@@ -77,7 +79,7 @@ export const BookPage = () => {
             <section className='book-feedback-container'>
               <div className="book-raiting-container ">
                 <h4 className='raiting-title'>Рейтинг</h4>
-                <div className='raiting'><Rating /><h4>{currentBook.rating === null ? 0 : currentBook.rating}</h4></div>
+                <div className='raiting'><Rating rating={currentBook.rating}/><h4>{currentBook.rating === null ? 0 : currentBook.rating}</h4></div>
               </div>
               <div className='book-detailed-container'>
                 <h4 className='detailed-title'>Подробная информация</h4>

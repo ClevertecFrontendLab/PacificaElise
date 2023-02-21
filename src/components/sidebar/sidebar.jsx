@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadCategories, selectAllCategories, selectCategoriesInfo } from '../../features/categories/categories-slice';
-import { setCategory, setPath } from '../../features/controls/controls-slice';
+import { selectControls, setCategory, setPath } from '../../features/controls/controls-slice';
 import { selectAllBooks, selectBooksInfo } from '../../features/books/books-slice';
 import {setToogleErrorToast} from '../../features/toggle-error-toast/toggle-error-toast-slice'
 
@@ -14,6 +14,7 @@ export const Sidebar = () => {
   const dispatch = useDispatch();
   const books = useSelector(selectAllBooks);
   const categories = useSelector(selectAllCategories);
+  const {path} = useSelector(selectControls);
   const {statusCat, errorCat, qty} = useSelector(selectCategoriesInfo);
   const {error, status} = useSelector(selectBooksInfo);
 
@@ -31,8 +32,9 @@ export const Sidebar = () => {
     };
   }, [qty, dispatch]);
 
+
   useEffect(() => {
-    if (errorCat || error || status === 'idle' || statusCat === 'idle') 
+    if (errorCat || error) 
     {
       setDropdown(false)
     } else setDropdown(true)
@@ -52,7 +54,7 @@ export const Sidebar = () => {
     <aside className='sidebar'>
         <ul className='sidebar-list'>
           <li className={dropdown ? 'sidebar-title underline' : 'sidebar-title'}>
-            <NavLink className={dropdown ? 'active-link' : ''} onClick={toogleDropdown} to='/books/all' data-test-id='navigation-showcase'>Витрина книг
+            <NavLink className={dropdown ? 'active-link' : ''} onClick={toogleDropdown} to={`/books/${path}`} data-test-id='navigation-showcase'>Витрина книг
             </NavLink>
             {errorCat || error || statusCat === 'loading' || status === 'loading' ? 
               null : (
@@ -63,20 +65,24 @@ export const Sidebar = () => {
             {status === 'recieved' && statusCat === 'recieved' ?  
               <ul className={dropdown ? 'sidebar-categories' : 'sidebar-categories-not-visible'}>
                 <li className='sidebar-category'>
-                  <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to='/books/all' data-test-id='navigation-books' onClick={(e) => handleSelectCategory(e.target.innerText)}>Все книги</NavLink>
+                  <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to='/books/all' data-test-id='navigation-books' onClick={(e) => {
+                        handleSelectCategory(e.target.innerText); 
+                        handleSelectPath('all')
+                        }
+                        }>Все книги</NavLink>
                 </li>
                 {
                   categories.map(category => 
                     <li className='sidebar-category' key={category.id}>
-                      <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to={`/books/${category.path}`} onClick={(e) => {
+                      <NavLink className={({isActive}) => isActive ? 'active-link' : ''} to={`/books/${category.path}`} data-test-id={`navigation-${category.path}`} onClick={(e) => {
                         handleSelectCategory(e.target.innerText); 
                         handleSelectPath(category.path)
                         }
                         }>
                       {category.name}
                       </NavLink> 
-                      <span> {
-                        bookCategories.length === 0 ? '' : bookCategories.filter(bookCategory => category.name === bookCategory).length
+                      <span data-test-id={`navigation-book-count-for-${category.path}`}> {
+                        bookCategories.filter(bookCategory => category.name === bookCategory).length
                         }
                       </span>
                     </li>

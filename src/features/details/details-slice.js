@@ -2,7 +2,7 @@
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-export const loadBookById = createAsyncThunk('@@details/lolad-book', (id, { extra: { client, api } }) => {
+export const loadBookById = createAsyncThunk('@@details/load-book', (id, { extra: { client, api } }) => {
   return client.get(api.searchByBook(id));
 });
 
