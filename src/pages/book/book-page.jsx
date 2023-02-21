@@ -79,7 +79,7 @@ export const BookPage = () => {
             <section className='book-feedback-container'>
               <div className="book-raiting-container ">
                 <h4 className='raiting-title'>Рейтинг</h4>
-                <div className='raiting'><Rating /><h4>{currentBook.rating === null ? 0 : currentBook.rating}</h4></div>
+                <div className='raiting'><Rating rating={currentBook.rating}/><h4>{currentBook.rating === null ? 0 : currentBook.rating}</h4></div>
               </div>
               <div className='book-detailed-container'>
                 <h4 className='detailed-title'>Подробная информация</h4>

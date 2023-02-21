@@ -32,8 +32,9 @@ export const Sidebar = () => {
     };
   }, [qty, dispatch]);
 
+
   useEffect(() => {
-    if (errorCat || error || status === 'idle' || statusCat === 'idle') 
+    if (errorCat || error) 
     {
       setDropdown(false)
     } else setDropdown(true)
