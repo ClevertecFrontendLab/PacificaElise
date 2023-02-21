@@ -26,7 +26,6 @@ const defaultOptions = {
   animationData,
 };
 */
-console.log (statusBookId, status, statusCat, error, errorCat)
 
 return (
   <div className='loader-wrapper'>

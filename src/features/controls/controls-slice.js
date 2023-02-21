@@ -22,10 +22,13 @@ const controlsSlice = createSlice({
       state.path = action.payload;
     },
     clearControls: () => initialState,
+    clearSearch: (state) => {
+      state.search = '';
+    },
   },
 });
 
-export const { setSearch, setCategory, setPath, clearControls } = controlsSlice.actions;
+export const { setSearch, setCategory, setPath, clearControls, clearSearch } = controlsSlice.actions;
 export const controlsReducer = controlsSlice.reducer;
 
 export const selectSearch = (state) => state.controls.search;

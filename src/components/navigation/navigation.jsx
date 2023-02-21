@@ -10,9 +10,10 @@ import './navigation.scss';
 export const Navigation = ({onChangeView}) => {
 const dispatch = useDispatch();
 const search =  useSelector(selectSearch);
+const [orange, setOrange] = useState(false);
 
 const handleSearch = (e) => {
-  dispatch(setSearch(e.target.value))
+  dispatch(setSearch(e.target.value));
 }
 
   const [btns, setBtns] = useState([
@@ -33,9 +34,9 @@ return (
   <nav className='navigation'>
     <form className='form'>
       <div className={isScreenSm && searchIsActive ? 'search active' : 'search'}>
-        <button type='button' aria-label='search' data-test-id='button-search-open' className={isScreenSm && searchIsActive ? 'invisible' : 'icon'} onClick={() => setSearchIsActive(true)}/>
+        <button type='button' aria-label='search' data-test-id='button-search-open' className={isScreenSm && searchIsActive ? 'invisible' : orange ? 'icon-orange' : 'icon'} onClick={() => setSearchIsActive(true)}/>
         <div className='input'>
-          <input type='text' placeholder='Поиск книги или автора…' data-test-id='input-search' className={isScreenSm && !searchIsActive ? 'invisible' : 'input-search'} onChange={handleSearch} value={search}/>
+          <input onFocus={() => setOrange(true)} onBlur={() => setOrange(false)}type='text' placeholder='Поиск книги или автора…' data-test-id='input-search' className={isScreenSm && !searchIsActive ? 'invisible' : 'input-search'} onChange={handleSearch} value={search}/>
           <button className='clear' type='button' aria-label='clear' data-test-id='button-search-close' onClick={() => setSearchIsActive(false)}/>
         </div>
       </div>

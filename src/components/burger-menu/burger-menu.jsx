@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadCategories, selectAllCategories, selectCategoriesInfo } from '../../features/categories/categories-slice';
-import { setCategory, setPath } from '../../features/controls/controls-slice';
+import { selectControls, setCategory, setPath } from '../../features/controls/controls-slice';
 import { selectAllBooks, selectBooksInfo } from '../../features/books/books-slice';
 import { setToogleErrorToast } from '../../features/toggle-error-toast/toggle-error-toast-slice';
 
@@ -15,8 +15,8 @@ import './burger-menu.scss';
 export const BurgerMenu = () => {
   const dispatch = useDispatch();
   const books = useSelector(selectAllBooks);
-  const { qty } = useSelector(selectCategoriesInfo);
   const categories = useSelector(selectAllCategories);
+  const {path} = useSelector(selectControls);
   const { statusCat, errorCat } = useSelector(selectCategoriesInfo);
   const { error, status } = useSelector(selectBooksInfo);
 
@@ -85,16 +85,22 @@ export const BurgerMenu = () => {
           {status === 'recieved' && statusCat === 'recieved' ?
             <ul className={dropdownBurger ? 'menu-categories' : 'menu-categories not-visible'}>
               <li className='menu-category'>
-                <NavLink className={({ isActive }) => isActive ? 'active-link' : ''} to='/books/all' onClick={(e) => { setToggleMenu(false); handleSelectCategory(e.target.innerText) }} data-test-id='burger-books'>Все книги</NavLink>
+                <NavLink className={({ isActive }) => isActive ? 'active-link' : ''} to='/books/all' onClick={(e) => { setToggleMenu(false); handleSelectCategory(e.target.innerText); handleSelectPath('all') }} data-test-id='burger-books'>Все книги</NavLink>
               </li>
               {
                 categories.map(category =>
                   <li className='menu-category' key={category.id}>
-                    <NavLink className={({ isActive }) => isActive ? 'active-link' : ''} onClick={(e) => { setToggleMenu(false); handleSelectCategory(e.target.innerText); handleSelectPath(category.path) }} to={`/books/${category.path}`}>
+                    <NavLink className={({ isActive }) => isActive ? 'active-link' : ''} 
+                      onClick={(e) => { 
+                        setToggleMenu(false); 
+                        handleSelectCategory(e.target.innerText); 
+                        handleSelectPath(category.path) }
+                        } 
+                      to={`/books/${category.path}`} data-test-id={`burger-${category.path}`}>
                       {category.name}
                     </NavLink>
-                    <span> {
-                      bookCategories.length === 0 ? '' : bookCategories.filter(bookCategory => category.name === bookCategory).length
+                    <span data-test-id={`burger-book-count-for-${category.path}`}> {
+                      bookCategories.filter(bookCategory => category.name === bookCategory).length
                     }
                     </span>
                   </li>

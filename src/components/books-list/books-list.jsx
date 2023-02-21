@@ -12,15 +12,13 @@ export const BooksList = () => {
   const dispatch = useDispatch();
   const {search, category, path} = useSelector(selectControls);
   const books = useSelector(state => selectVisibleBooks (state, {search, category}));
-  const {qty} = useSelector(selectBooksInfo);
+  const booksInCategory = useSelector(state => selectVisibleBooks (state, {category}));
   const {status} = useSelector(selectBooksInfo);
   const {statusCat} = useSelector(selectCategoriesInfo)
 
   useEffect(() => {
-    if (!qty) {
-      dispatch(loadBooks());
-    }
-  }, [qty, dispatch]);
+    dispatch(loadBooks());
+  }, [dispatch]);
 
   const [choosenView, setChoosenView] = useState();
 
@@ -33,18 +31,19 @@ export const BooksList = () => {
       {status === 'recieved' && statusCat === 'recieved' ?  
         <React.Fragment>
           <Navigation onChangeView={ handleChangeView }/>
-          <section className={choosenView === 1 ? 'books-list-list' : 'books-list'}>
+          <section className={!booksInCategory.length || !books.length ? 'nothing-found' : choosenView === 1 ? 'books-list-list' : 'books-list'}>
             {
-            books.length ? (
-                books.map((book) => <BookCard 
-                key={book.id} 
-                {...book} 
-                path={path}
-                category={category}
-                choosenView={choosenView}/>)
-              ) : (
-                <h4>Nothing found</h4>
-              )
+            !booksInCategory.length ? <p className='empty' data-test-id='empty-category'>В этой категории книг ещё нет</p> :
+              books.length ? (
+                  books.map((book) => <BookCard 
+                  key={book.id} 
+                  {...book} 
+                  path={path}
+                  category={category}
+                  choosenView={choosenView}/>)
+                ) : (
+                  <p className='empty' data-test-id='search-result-not-found'>По запросу ничего не найдено</p>
+                )
             }
           </section>
         </React.Fragment> : 
