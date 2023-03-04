@@ -81,15 +81,17 @@ export const LogIn = () => {
                 <h2 className='login-title'>Вход в личный кабинет</h2>
               </div>
               <div className='login-inputs'>
-                <label htmlFor='identifier' className='login-label'>
-                  <input className='login-input' id='identifier' type='text' placeholder='Логин' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
+                <div className='login-container'>
+                  <input className={errors.identifier ? 'login-input borderline' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
+                  <label htmlFor='identifier' className='login-label'>Логин</label>  
                   <span className='error'>{errors.identifier?.message}</span>
-                </label>   
-                <label htmlFor='password' className='login-label'> 
-                  <input className='login-input' id='password' type='password' placeholder='Пароль' {...register('password', {required: 'Поле не может быть пустым'})}/>
+                </div> 
+                <div className='login-container'>
+                  <input className={errors.password ? 'login-input borderline' : 'login-input'} id='password' type='password' required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
+                  <label htmlFor='password' className='login-label'>Пароль</label>
                   <span className='error'>{errors.password?.message}</span>
                   <NavLink to='/forgot-password' className='forgot-password'>Забыли логин или пароль?</NavLink>
-                </label>   
+                </div>   
               </div>           
               <button className='login-btn' type='submit'>вход</button>
               <p className='login-enter'>Нет учётной записи?

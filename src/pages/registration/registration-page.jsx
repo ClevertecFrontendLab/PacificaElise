@@ -73,41 +73,47 @@ export const RegistrationPage = () => {
         </div>
         {step === 1 && (
         <div className='reg-inputs'>
-          <label htmlFor='username' className='reg-label'>
-            <input className='reg-input' id='username' type='text' placeholder='Придумайте логин для входа'
+          <div className='reg-container'>
+            <input className='reg-input' id='username' type='text' required='required'
               {...register('username', {required: 'Поле не может быть пустым'})}/>
+            <label htmlFor='username' className='reg-label'>Придумайте логин для входа</label>
             {errors.username?.message ? <span className='error'>{errors.username?.message}</span> : <span>Используйте для логина латинский алфавит и цифры</span>}
-          </label>
-          <label htmlFor='password' className='reg-label'>
-            <input className='reg-input' id='password' type='password' placeholder='Пароль' {...register('password', {required: 'Поле не может быть пустым'})}/>
+          </div>
+          <div className='reg-container'>
+            <input className='reg-input' id='password' type='password' required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
+            <label htmlFor='password' className='reg-label'>Пароль</label>
             {errors.password?.message ? <span className='error'>{errors.password?.message}</span> :
             <span>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>}
-          </label>
+          </div>
         </div>
       )}
       {step === 2 && (
         <div className='reg-inputs'>
-          <label htmlFor='firstName' className='reg-label'>
-            <input className='reg-input' id='firstName' type='text' placeholder='Имя' {...register('firstName', {required: 'Поле не может быть пустым'})}/>
+          <div className='reg-container'>
+            <input className='reg-input' id='firstName' type='text' required='required' {...register('firstName', {required: 'Поле не может быть пустым'})}/>
+            <label htmlFor='firstName' className='reg-label'>Имя</label>
             {errors.firstName?.message && <span className='error'>{errors.firstName?.message}</span>}
-          </label>   
-          <label htmlFor='lastName' className='reg-label'>
-            <input className='reg-input' id='lastName' type='text' placeholder='Фамилия' {...register('lastName', {required: 'Поле не может быть пустым'})}/>
+          </div>   
+          <div className='reg-container'>
+            <input className='reg-input' id='lastName' type='text' required='required' {...register('lastName', {required: 'Поле не может быть пустым'})}/>
+            <label htmlFor='lastName' className='reg-label'>Фамилия</label>
             {errors.lastName?.message && <span className='error'>{errors.lastName?.message}</span>}
-          </label>   
+          </div>   
         </div>
       )}
       {step === 3 && (
         <div className='reg-inputs'>
-          <label htmlFor='phone' className='reg-label'>
-            <input className='reg-input' id='phone' type='phone' placeholder='Номер телефона' {...register('phone', {required: 'Поле не может быть пустым'})}/>
+          <div className='reg-container'>
+            <input className='reg-input' id='phone' type='phone' required='required' {...register('phone', {required: 'Поле не может быть пустым'})}/>
+            <label htmlFor='phone' className='reg-label'>Номер телефона</label>
             {errors.phone?.message && <span className='error'>{errors.phone?.message}</span>}
-          </label>   
-          <label htmlFor='email' className='reg-label'>
-            <input className='reg-input' id='email' type='email' placeholder='E-mail'
+          </div>   
+          <div className='reg-container'>
+            <input className='reg-input' id='email' type='email' required='required'
             {...register('email', {required: 'Поле не может быть пустым'})}/>
+            <label htmlFor='email' className='reg-label'>E-mai</label>
             {errors.email?.message && <span className='error'>{errors.email?.message}</span>}
-          </label>  
+          </div>  
         </div>
       )}
         {step === 3 ?

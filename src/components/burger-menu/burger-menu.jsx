@@ -144,7 +144,7 @@ export const BurgerMenu = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/registration'
+              <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/auth'
                 onClick={() => {
                   functionBlock(); 
                   handleLogOut()}}>
