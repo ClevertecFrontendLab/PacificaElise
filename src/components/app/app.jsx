@@ -1,4 +1,5 @@
 import { Route, Routes, Navigate} from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { Layout } from '../layout/layout';
 import { LayoutMainPage } from '../../pages/layout-main-page';
@@ -8,11 +9,21 @@ import { BookPage } from '../../pages/book';
 import { ProfilePage } from '../../pages/profile-page';
 import { NotFoundPage } from '../../pages/not-found-page';
 import { BooksList } from '../books-list/books-list';
+import { RegistrationPage } from '../../pages/registration';
+import { LogIn } from '../../pages/log-in';
+import {ForgotPassword} from '../../pages/forgot-password';
+import { selectIsStorage } from '../../features/auth/auth-slice';
 
-export const App = () => (
+export const App = () => {
+  const isStorage = useSelector(selectIsStorage);
+
+  return (
     <Routes>
-      <Route path='/' element={<Layout />}>
-      <Route path='/' element={<Navigate to='/books/all'/>}/>
+      <Route path='/' element = {<Navigate to={isStorage? '/auth' : '/registration'}/>}/>
+      <Route path='/auth' element={<LogIn />} />
+      <Route path='/registration' element={<RegistrationPage />} />
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/' element={<Layout />} >
         <Route path='books/' element={<LayoutMainPage />}>
             <Route path=':bookCategory' element={<BooksList />} />
             <Route path='terms' element={<UseTerms />} />
@@ -23,4 +34,5 @@ export const App = () => (
       </Route>
       <Route path='*' element={<NotFoundPage />} />
     </Routes>
-  );
+  )
+};

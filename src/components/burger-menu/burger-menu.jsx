@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadCategories, selectAllCategories, selectCategoriesInfo } from '../../features/categories/categories-slice';
@@ -11,6 +11,7 @@ import { setToogleErrorToast } from '../../features/toggle-error-toast/toggle-er
 import { ReactComponent as Arrow } from '../../imgs/icons/arrow.svg';
 
 import './burger-menu.scss';
+import { logOut, selectIsStorage } from '../../features/auth/auth-slice';
 
 export const BurgerMenu = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export const BurgerMenu = () => {
 
   const removeErrorToast = () => dispatch(setToogleErrorToast(false))
 
-  const toogledropdownBurgerBurger = () => {
+  const toogledropdownBurger = () => {
     setdropdownBurgerBurger(dropdownBurger => !dropdownBurger);
   }
 
@@ -34,14 +35,11 @@ export const BurgerMenu = () => {
     setToggleMenu(isToggleMenu => !isToggleMenu);
   }
 
-  const [isHiddenScroll, setHiddenScroll] = useState(false);
-
-  const hiddenScroll = (bool) => {
-    setHiddenScroll(bool);
-    if (isHiddenScroll === false) {
-      document.body.style.overflow = 'hidden'
-    } else {
+  const hiddenScroll = () => {
+    if (isToggleMenu) {
       document.body.style.overflow = 'auto'
+    } else {
+      document.body.style.overflow = 'hidden'
     }
   }
   
@@ -59,25 +57,40 @@ export const BurgerMenu = () => {
     dispatch(setPath(path))
   };
 
+  const functionBlock = () => {
+    setdropdownBurgerBurger(false); 
+    removeErrorToast(false); 
+    setToggleMenu(false);
+    hiddenScroll()
+  }
+
   const bookCategories = books.map(book => book.categories).flat();
+
+  const handleLogOut = () => {
+    dispatch(logOut());
+    localStorage.clear();
+  }
 
   return (
     <nav className='burger-menu'>
-      <button className={isToggleMenu ? 'burger-btn close' : 'burger-btn'} onClick={() => { toogleMenu(); { isToggleMenu ? hiddenScroll(false) : hiddenScroll(true) } }} data-test-id='button-burger'>
+      <button className={isToggleMenu ? 'burger-btn close' : 'burger-btn'} onClick={() => {
+        toogleMenu();
+        hiddenScroll()
+        }} data-test-id='button-burger'>
         <span />
         <span />
         <span />
       </button>
 
       <aside className={isToggleMenu ? 'menu active' : 'menu'}
-        onClick={() => setToggleMenu(false)} data-test-id='burger-navigation'>
+        onClick={() => {setToggleMenu(false); hiddenScroll()}} data-test-id='burger-navigation'>
         <ul className='menu-list' onClick={e => e.stopPropagation()}>
           <li className={dropdownBurger && status !== 'idle' ? 'menu-title underline' : 'menu-title'}>
-            <NavLink className={dropdownBurger && status !== 'idle' ? 'active-link' : ''} onClick={toogledropdownBurgerBurger} to='/books/all' data-test-id='burger-showcase'>Витрина книг
+            <NavLink className={dropdownBurger && status !== 'idle' ? 'active-link' : ''} onClick={toogledropdownBurger} to='/books/all' data-test-id='burger-showcase'>Витрина книг
             </NavLink>
             {errorCat || error || statusCat === 'loading' || status === 'loading' ?
               null : (
-                <button type='button' className='dropdownBurgerBtn' aria-label='dropdownBurgerMenu' onClick={() => toogledropdownBurgerBurger()}><Arrow className={dropdownBurger ? 'arrow-up' : ''} />
+                <button type='button' className='dropdownBurgerBtn' aria-label='dropdownBurgerMenu' onClick={() => toogledropdownBurger()}><Arrow className={dropdownBurger ? 'arrow-up' : ''} />
                 </button>
               )
             }
@@ -85,7 +98,12 @@ export const BurgerMenu = () => {
           {status === 'recieved' && statusCat === 'recieved' ?
             <ul className={dropdownBurger ? 'menu-categories' : 'menu-categories not-visible'}>
               <li className='menu-category'>
-                <NavLink className={({ isActive }) => isActive ? 'active-link' : ''} to='/books/all' onClick={(e) => { setToggleMenu(false); handleSelectCategory(e.target.innerText); handleSelectPath('all') }} data-test-id='burger-books'>Все книги</NavLink>
+                <NavLink className={({ isActive }) => isActive ? 'active-link' : ''} to='/books/all' onClick={(e) => { 
+                  setToggleMenu(false); 
+                  handleSelectCategory(e.target.innerText); 
+                  handleSelectPath('all'); 
+                  hiddenScroll()
+                  }} data-test-id='burger-books'>Все книги</NavLink>
               </li>
               {
                 categories.map(category =>
@@ -94,7 +112,9 @@ export const BurgerMenu = () => {
                       onClick={(e) => { 
                         setToggleMenu(false); 
                         handleSelectCategory(e.target.innerText); 
-                        handleSelectPath(category.path) }
+                        handleSelectPath(category.path);
+                        hiddenScroll()
+                      }
                         } 
                       to={`/books/${category.path}`} data-test-id={`burger-${category.path}`}>
                       {category.name}
@@ -110,22 +130,24 @@ export const BurgerMenu = () => {
             null
           }
           <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/books/terms'
-            onClick={() => { setdropdownBurgerBurger(false); removeErrorToast(false); setToggleMenu(false) }} data-test-id='burger-terms'>
+            onClick={() => functionBlock()} data-test-id='burger-terms'>
             <li>Правила пользования</li>
           </NavLink>
-          <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/books/contract' onClick={() => { setdropdownBurgerBurger(false); removeErrorToast(false); setToggleMenu(false) }} data-test-id='burger-contract'>
+          <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/books/contract' onClick={() => functionBlock()} data-test-id='burger-contract'>
             <li>Договор оферты</li>
           </NavLink>
           <ul className='menu-profile'>
             <li>
               <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/profile'
-                onClick={() => { setdropdownBurgerBurger(false); removeErrorToast(false); setToggleMenu(false) }}>
+                onClick={() => functionBlock()}>
                 Профиль
               </NavLink>
             </li>
             <li>
-              <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='*'
-                onClick={() => { setdropdownBurgerBurger(false); removeErrorToast(false); setToggleMenu(false) }}>
+              <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/registration'
+                onClick={() => {
+                  functionBlock(); 
+                  handleLogOut()}}>
                 Выход
               </NavLink>
             </li>

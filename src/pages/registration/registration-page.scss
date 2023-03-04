@@ -1,0 +1,158 @@
+@import '../../global.scss';
+.loader-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.loader {
+  position: absolute;
+  z-index: 1500;
+  top: 500px;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+}  
+
+.blur {
+  position: absolute;
+  z-index: 1000;
+  filter: blur(10px);
+}
+
+.reg {
+  width: 100vw;
+  height: 100vh;
+  background: $btn-color;
+  margin-top: -32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 46px;
+
+  .company-title {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.25;
+    color: #FFFFFF;
+  }
+
+  .reg-form {
+    width: 590px;
+    height: 492px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 48px 56px;
+    gap: 32px;
+
+    .reg-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .reg-title {
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 1.25;
+        color: #363636;
+      }
+
+      .reg-step {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 1.29;
+        color: #363636;
+      }
+    }
+
+    .reg-inputs {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+
+      .reg-label {
+      width: 100%;
+      height: 74px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      span {
+        margin-left: 12px;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 1.33;
+        letter-spacing: 0.2px;
+        color: #A7A7A7;
+        mix-blend-mode: normal;
+      }
+
+      .error {
+        margin-left: 12px;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 1.33;
+        color: #F42C4F;
+        mix-blend-mode: normal;
+      }
+
+      .reg-input {
+        background: #F9F9FA;
+        border-radius: 4px;
+        width: 100%;
+        height: 56px;
+        border: none;
+        padding: 19px 12px;
+        font-style: normal;
+        font-size: 14px;
+        line-height: 1.29;
+        color: #363636;
+        mix-blend-mode: normal;
+        border-bottom: solid 1px #BFC4C9;
+      }
+      }
+    }
+    
+    .reg-btn {
+      width: 100%;
+      height: 52px;
+      border-radius: 30px;
+      padding: 14px 125px;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      border: none;
+      margin-top: 18px;
+      background: $btn-color;
+      
+      &:disabled {
+        background: #EBEBEB;
+      }
+    }
+
+    .reg-enter {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.5;
+      color:#727272;
+      margin-top: -16px;
+
+      .reg-login {
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        color: #363636;
+        margin-left: 16px;
+      }
+    }
+  }
+}
+
