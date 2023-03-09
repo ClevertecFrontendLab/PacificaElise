@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Route, Routes, Navigate} from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -13,6 +15,7 @@ import { RegistrationPage } from '../../pages/registration';
 import { LogIn } from '../../pages/log-in';
 import {ForgotPassword} from '../../pages/forgot-password';
 import { selectIsStorage } from '../../features/auth/auth-slice';
+import { RestorePassword } from '../../pages/restore-password/restore-password';
 
 export const App = () => {
   const isStorage = useSelector(selectIsStorage);
@@ -23,6 +26,7 @@ export const App = () => {
       <Route path='/auth' element={<LogIn />} />
       <Route path='/registration' element={<RegistrationPage />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/forgot-pass' element={<RestorePassword />} />
       <Route path='/' element={<Layout />} >
         <Route path='books/' element={<LayoutMainPage />}>
             <Route path=':bookCategory' element={<BooksList />} />

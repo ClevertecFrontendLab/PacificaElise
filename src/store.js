@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { configureStore } from '@reduxjs/toolkit';
 import axios from './axios';
 
@@ -8,7 +10,8 @@ import { categoriesReducer } from './features/categories/categories-slice';
 import { detailsReducer } from './features/details/details-slice';
 import { toogleErrorToastReducer } from './features/toggle-error-toast/toggle-error-toast-slice';
 import { authReducer } from './features/auth/auth-slice';
-import { regReducer } from './features/reg/reg';
+import { regReducer } from './features/reg/reg-slice';
+import { forgotPassReducer } from './features/forgot-password/forgot-password-slice';
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +22,7 @@ export const store = configureStore({
     errorToast: toogleErrorToastReducer,
     auth: authReducer,
     reg: regReducer,
+    forgotPass: forgotPassReducer,
   },
   devTools: true,
   middleware: (getDefaultMiddleware) =>

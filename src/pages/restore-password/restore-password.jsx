@@ -8,9 +8,9 @@ import { loadUserData, selectIsAuth, selectUserInfo, dropError } from '../../fea
 import {ReactComponent as ClosedEye} from '../../imgs/icons/closed-eye.svg';
 import {ReactComponent as OpenedEye} from '../../imgs/icons/opened-eye.svg';
 
-import './log-in.scss';
+import './restore-password.scss';
 
-export const LogIn = () => { 
+export const RestorePassword = () => { 
   const dispatch = useDispatch();
   const {errorAuth, statusAuth} = useSelector(selectUserInfo);
   const isAuth = useSelector(selectIsAuth);
@@ -77,40 +77,40 @@ export const LogIn = () => {
         </div> :
         null
       }
-      <div className={statusAuth === 'loading' ? 'login-wrapper blur' : 'login-wrapper'}>
+      <div className={statusAuth === 'loading' ? 'restore-password-wrapper blur' : 'restore-password-wrapper'}>
         {errorAuth && !errorAuth.includes('400') ? 
-          <div className='login'>
+          <div className='restore-password'>
             <h1 className='company-title'>Cleverland</h1>
-            <div className='login-form-err'>
-              <div className='login-block'>
-                <h2 className='login-title'>Вход не выполнен</h2>
+            <div className='restore-password-form-err'>
+              <div className='restore-password-block'>
+                <h2 className='restore-password-title'>Вход не выполнен</h2>
               </div>
-              <div className='login-inputs'>
-                <p className='login-again'>Что-то пошло не так. Попробуйте ещё раз.</p>
+              <div className='restore-password-inputs'>
+                <p className='restore-password-again'>Что-то пошло не так. Попробуйте ещё раз.</p>
               </div>           
-              <button className='login-btn-again' type='button'><NavLink to='/auth' onClick={removeError}>повторить</NavLink></button>
+              <button className='restore-password-btn-again' type='button'><NavLink to='/auth' onClick={removeError}>повторить</NavLink></button>
             </div>
           </div>
           : 
-          <div className='login'>
+          <div className='restore-password'>
             <h1 className='company-title'>Cleverland</h1>
-            <form className='login-form' onSubmit={handleSubmit(onSubmit)}>
-              <div className='login-block'>
-                <h2 className='login-title'>Вход в личный кабинет</h2>
+            <form className='restore-password-form' onSubmit={handleSubmit(onSubmit)}>
+              <div className='restore-password-block'>
+                <h2 className='restore-password-title'>Вход в личный кабинет</h2>
               </div>
-              <div className='login-inputs'>
-                <div className='login-container'>
-                  <input className={errors.identifier?.type === 'required' ? 'login-input-warn' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
-                  <label htmlFor='identifier' className='login-label'>Логин</label>  
+              <div className='restore-password-inputs'>
+                <div className='restore-password-container'>
+                  <input className={errors.identifier?.type === 'required' ? 'restore-password-input-warn' : 'restore-password-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
+                  <label htmlFor='identifier' className='restore-password-label'>Логин</label>  
                   <span className='error'>{errors.identifier?.message}</span>
                 </div> 
-                <div className='login-container'>
-                  <input className={errors.password?.type === 'required' ? 'login-input-warn' : 'login-input'} id='password' type={type} required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
-                  <label htmlFor='password' className='login-label'>Пароль</label>
+                <div className='restore-password-container'>
+                  <input className={errors.password?.type === 'required' ? 'restore-password-input-warn' : 'restore-password-input'} id='password' type={type} required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
+                  <label htmlFor='password' className='restore-password-label'>Пароль</label>
                   <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
                   <span className='error'>{errors.password?.message}</span>
                   {errorAuth?.includes('400') ?
-                    <div className='login-error-message'>
+                    <div className='restore-password-error-message'>
                       <span className='restore-password warn'>Неверный логин или пароль!</span>
                       <NavLink className='restore-password'>Восстановить?</NavLink>
                     </div> :
@@ -118,9 +118,9 @@ export const LogIn = () => {
                     }
                 </div>   
               </div>           
-              <button ddisabled={!isValid} className='login-btn' type='submit'>вход</button>
-              <p className='login-enter'>Нет учётной записи?
-                <NavLink to='/registration' className='login-reg'>регистрация</NavLink>
+              <button ddisabled={!isValid} className='restore-password-btn' type='submit'>вход</button>
+              <p className='restore-password-enter'>Нет учётной записи?
+                <NavLink to='/registration' className='restore-password-reg'>регистрация</NavLink>
               </p>
             </form>
           </div>

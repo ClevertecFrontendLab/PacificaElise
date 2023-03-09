@@ -6,7 +6,7 @@ import { NavLink, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { fetchRegister, selectRegInfo, clearReg } from '../../features/reg/reg';
+import { fetchRegister, selectRegInfo, clearReg } from '../../features/reg/reg-slice';
 import {ReactComponent as RegArrow} from '../../imgs/icons/reg-arrow.svg';
 import { selectIsAuth } from '../../features/auth/auth-slice';
 
@@ -31,7 +31,8 @@ export const RegistrationPage = () => {
     formState: { errors, isValid },
     handleSubmit,
     reset,
-    getFieldState  
+    getFieldState,
+    watch 
   } = useForm({
     mode: 'all',
     criteriaMode: "all",
@@ -42,10 +43,26 @@ export const RegistrationPage = () => {
   const [disabled, setDisabled] = useState(true);
   const [disabled2, setDisabled2] = useState(true);
 
-useEffect (() => {
-  setDisabled((getFieldState('username').isDirty === true && getFieldState('username').invalid === false && getFieldState('password').isDirty === true && getFieldState('password').invalid === false) ? false : true);
-  setDisabled2((getFieldState('firstName').isDirty === true && getFieldState('firstName').invalid === false && getFieldState('lastName').isDirty === true && getFieldState('lastName').invalid === false) ? false : true)
-}, [getFieldState('username').isDirty, getFieldState('username').invalid, getFieldState('password').isDirty, getFieldState('password').invalid, getFieldState('firstName').isDirty, getFieldState('firstName').invalid, getFieldState('lastName'), getFieldState('lastName').invalid])
+  useEffect (() => {
+    setDisabled(
+      (getFieldState('username').isDirty === true && getFieldState('username').invalid === false && 
+      getFieldState('password').isDirty === true && getFieldState('password').invalid === false) ? 
+      false : true)}, [
+        getFieldState('username').isDirty, 
+        getFieldState('username').invalid, 
+      getFieldState('password').isDirty,
+      getFieldState('password').invalid]);
+
+      
+  const firstName = watch('firstName');
+  const lastName = watch('lastName');
+
+  useEffect (() => {
+    setDisabled2(
+      (getFieldState('firstName').isDirty === true && getFieldState('firstName').invalid === false && 
+      getFieldState('lastName').isDirty === true && getFieldState('lastName').invalid === false) ? 
+      false : true);
+  }, [firstName, lastName])
 
   const onSubmit = (values) => { 
     dispatch(fetchRegister(values));
@@ -172,14 +189,14 @@ useEffect (() => {
             <>
               <div className='reg-inputs'>
                 <div className='reg-container'>
-                  <input className={errors.username?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='username' type='text' required='required' name='username'  
-                  {...register('username')} onBlur={disabled}/>
+                  <input className={errors.username?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='username' type='text' required='required'  
+                  {...register('username')}/>
                   <label htmlFor='username' className='reg-label'>Придумайте логин для входа</label>
                   <span className='error-span'>{light(errors.username?.message, 'Используйте для логина латинский алфавит и цифры')}</span>
                 </div>
                 <div className='reg-container'>
                   <input className={errors.password?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='password' type={type} required='required' 
-                  {...register("password")} onBlur={disabled2}/>
+                  {...register("password")}/>
                   <label htmlFor='password' className='reg-label'>Пароль</label>
                   <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
                   {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check/></p>}
@@ -197,19 +214,20 @@ useEffect (() => {
             <>
               <div className='reg-inputs'>
                 <div className='reg-container'>
-                  <input className={errors.firstName?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='firstName' type='text' required='required' 
+                  <input className={errors.firstName?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='firstName' type='text' required='required'  
                   {...register('firstName')}/>
                   <label htmlFor='firstName' className='reg-label'>Имя</label>
-                  {errors.firstName?.message && <span className='error'>{errors.firstName?.message}</span>}
-                </div>   
+                  <span className='error'>{errors.firstName?.message}</span>
+                </div>
+                  
                 <div className='reg-container'>
-                  <input className={errors.lastName?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='lastName' type='text' required='required' 
+                  <input className={errors.lastName?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='lastName' type='text' required='required'   
                   {...register('lastName')}/>
                   <label htmlFor='lastName' className='reg-label'>Фамилия</label>
-                  {errors.lastName?.message && <span className='error'>{errors.lastName?.message}</span>}
-                </div>   
+                  <span className='error'>{errors.lastName?.message}</span>
+                </div>
               </div>
-              <button disabled={disabled2} className='reg-btn' type='submit' onClick={() => {setStep(prevStep => prevStep+1)}}>последний шаг</button>
+              <button disabled={disabled2} className='reg-btn' type='button' onClick={() => {setStep(prevStep => prevStep+1)}}>последний шаг</button>
             </>
           )}
           {step === 3 && (

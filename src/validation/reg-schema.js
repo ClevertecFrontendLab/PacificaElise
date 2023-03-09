@@ -2,28 +2,6 @@
 
 import * as yup from 'yup';
 
-/*validate: (values) => {
-  const schema = Yup.object().shape({
-    email: Yup.string()
-      .matches(/georges.abitbol@gmail.com/, 'cant change email'),
-    providerName: Yup.string()
-      .required('type your name'),
-    password: Yup.string()
-      .min(8, 'at least 8 chars')
-      .matches(/[a-z]/, 'at least one lowercase char')
-      .matches(/[A-Z]/, 'at least one uppercase char')
-      .matches(/[a-zA-Z]+[^a-zA-Z\s]+/, 'at least 1 number or special char (@,!,#, etc).'),
-    passwordConfirm: Yup.string()
-      .equalTo(Yup.ref('password'), 'passwords don't match')
-  })
-
-  return schema.validate(values, { abortEarly: false })
-    .then(() => {})
-    .catch((err) => {
-      throw err
-    })
-}*/
-
 export const RegSchema = yup.object().shape({
   username: yup
     .string()
@@ -45,5 +23,12 @@ export const RegSchema = yup.object().shape({
       /^[+]{1}[0-9]{3} [(]{1}[0-9]{2}[)]{1} [0-9]{3}[-]{1}[0-9]{2}[-]{1}[0-9]{2}$/,
       'В формате +375 (xx) xxx-xx-xx'
     ),
-  email: yup.string().email('Введите корректный e-mail').required('Введите корректный e-mail'),
+  email: yup
+    .string()
+    .email('Введите корректный e-mail')
+    .required('Введите корректный e-mail')
+    .matches(
+      /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u,
+      'Введите корректный e-mail'
+    ),
 });
