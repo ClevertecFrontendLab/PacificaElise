@@ -20,8 +20,8 @@
   filter: blur(10px);
 }
 
-.borderline {
-  border-bottom: solid 1px #F42C4F;;
+.warn {
+  color: #F42C4F;
 }
 
 .login-wrapper {
@@ -42,10 +42,41 @@
       line-height: 1.25;
       color: #FFFFFF;
     }
-  
-    .center {
-      justify-content: space-around;
-      gap: 10px;
+
+    .login-form-err {
+      margin-top: 113px;
+      width: 600px;
+      height: 266px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 96px;
+      gap: 32px;
+
+      .login-again {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #363636;
+      }
+
+      .login-btn-again {
+        width: 100%;
+        height: 52px;
+        background: $btn-color;
+        border-radius: 30px;
+        padding: 14px 125px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 1.5;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        color: #FFFFFF;
+        border: none;
+      }
     }
     
     .login-form {
@@ -100,6 +131,14 @@
             transition: 0.3s;
             pointer-events: none;
           }
+
+          .eye-icon {
+            position: absolute;
+            top: 19px;
+            right: 12px;
+            border: none;
+            background: transparent;
+          }
     
           .error {
             position: absolute;
@@ -111,6 +150,25 @@
             line-height: 1.33;
             color: #F42C4F;
             mix-blend-mode: normal;
+          }
+
+          .login-error-message {
+            position: absolute;
+            top: 80px;
+            left: 12px;
+            display: flex;
+            flex-direction: column;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 1.33;
+            letter-spacing: 0.2px;
+
+            .restore-password {
+              font-weight: 500;
+              font-size: 12px;
+              line-height: 1.33;
+              letter-spacing: 0.2px;
+            }
           }
     
           .forgot-password {
@@ -134,12 +192,31 @@
             height: 56px;
             border: none;
             padding: 20px 0px 0px 12px;
+            // font-family: "fontello";
             font-size: 14px;
             line-height: 1.29;
             color: #363636;
             mix-blend-mode: normal;
             outline: none;
             border-bottom: solid 1px #BFC4C9;
+          }
+
+          .login-input-warn {
+            position: absolute;
+            box-sizing: border-box;
+            background: #F9F9FA;
+            border-radius: 4px;
+            width: 100%;
+            height: 56px;
+            border: none;
+            padding: 20px 0px 0px 12px;
+            // font-family: "fontello";
+            font-size: 14px;
+            line-height: 1.29;
+            color: #363636;
+            mix-blend-mode: normal;
+            outline: none;
+            border-bottom: solid 1px #F42C4F;
           }
 
           .login-input:focus + .login-label,
@@ -167,7 +244,7 @@
         text-transform: uppercase;
         color: #FFFFFF;
         border: none;
-        margin-top: 18px;
+        margin-top: 32px;
       }
   
       .login-enter {

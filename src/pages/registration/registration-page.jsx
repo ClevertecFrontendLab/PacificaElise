@@ -1,45 +1,105 @@
+/* eslint-disable */
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { fetchRegister, selectIsReg, selectRegInfo } from '../../features/reg/reg';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import './registration-page.scss';
+import { fetchRegister, selectRegInfo, clearReg } from '../../features/reg/reg';
 import {ReactComponent as RegArrow} from '../../imgs/icons/reg-arrow.svg';
 import { selectIsAuth } from '../../features/auth/auth-slice';
+
+import {RegSchema} from '../../validation/reg-schema';
+import InputMask from 'react-input-mask';
+import {ReactComponent as ClosedEye} from '../../imgs/icons/closed-eye.svg';
+import {ReactComponent as OpenedEye} from '../../imgs/icons/opened-eye.svg';
+import {ReactComponent as Check} from '../../imgs/icons/check.svg';
+
+import './registration-page.scss';
 
 export const RegistrationPage = () => { 
   const [step, setStep] = useState(1);
   const dispatch = useDispatch();
-  const isReg = useSelector(selectIsReg);
   const isAuth = useSelector(selectIsAuth);
-  const {statusReg} = useSelector(selectRegInfo);
+  const {statusReg, errorReg} = useSelector(selectRegInfo);
+  const [toggleIcon, setToggleIcon] = useState(<ClosedEye/>);
+  const [type, setType] = useState('password');  
 
-  const { register, formState: {errors, isValid}, setError, handleSubmit } = useForm({
-    defaultValues: {
-      username: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      phone: ''
-    },
-    mode: 'all'
-    }
+  const {
+    register,
+    formState: { errors, isValid },
+    handleSubmit,
+    reset,
+    getFieldState  
+  } = useForm({
+    mode: 'all',
+    criteriaMode: "all",
+    resolver: yupResolver(RegSchema),
+  }
   );
+
+  const [disabled, setDisabled] = useState(true);
+  const [disabled2, setDisabled2] = useState(true);
+
+useEffect (() => {
+  setDisabled((getFieldState('username').isDirty === true && getFieldState('username').invalid === false && getFieldState('password').isDirty === true && getFieldState('password').invalid === false) ? false : true);
+  setDisabled2((getFieldState('firstName').isDirty === true && getFieldState('firstName').invalid === false && getFieldState('lastName').isDirty === true && getFieldState('lastName').invalid === false) ? false : true)
+}, [getFieldState('username').isDirty, getFieldState('username').invalid, getFieldState('password').isDirty, getFieldState('password').invalid, getFieldState('firstName').isDirty, getFieldState('firstName').invalid, getFieldState('lastName'), getFieldState('lastName').invalid])
 
   const onSubmit = (values) => { 
     dispatch(fetchRegister(values));
-  }
-
-  if (isReg) {
-    return <Navigate to='/auth'/>
+    reset();
+    setStep(1);
+    setDisabled(true);
+    setDisabled2(true)
   }
 
   if (isAuth) {
     return <Navigate to='/books/all'/>
   }
 
+  const togglePassInput = () => {
+    if (type === 'password') {
+      setType('text');
+      setToggleIcon(<OpenedEye/>)
+    } else {
+      setType('password');
+      setToggleIcon(<ClosedEye/>)
+    }
+  }
+
+  const cleanReg = () => dispatch(clearReg());
+
+  const message = '';
+
+  const Hightlight = (props) => {
+    const {message, string} = props;
+    if (!message) return string;
+    const regexp = new RegExp(message, 'ig');
+    const matchValue = string.match(regexp);  
+    if (matchValue) {
+      return string.split(regexp).map((str, index, array) => {
+        if (index < array.length - 1) {
+          const match = matchValue.shift()
+          return <>{str}<span className='hightlight' key={index}>{match}</span></>
+        }
+        return str
+      })
+    }
+    return string
+  }
+
+  const light = useCallback((message, string) => {
+    return <Hightlight message={message} string={string} />
+  }, [message])
+
+
+  const formatChars = {
+      '9': '[0-9]',
+      '*': '[2,3,4,5,9]'
+  };
+  
   return (
   <div className='loader-wrapper'>
     {statusReg === 'loading' ?
@@ -64,67 +124,122 @@ export const RegistrationPage = () => {
       </div> :
       null
       }
-    <div className={statusReg === 'loading' ? 'reg blur' : 'reg'}>
+    <div className={statusReg === 'loading' ? 'reg-wrapper blur' : 'reg-wrapper'}>
+    {statusReg === 'recieved' ? 
+      <div className='reg'>
       <h1 className='company-title'>Cleverland</h1>
-      <form className='reg-form' onSubmit={handleSubmit(onSubmit)}>
+      <div className='reg-form-err'>
         <div className='reg-block'>
-          <h2 className='reg-title'>Регистрация</h2>
-          <span className='reg-step'>{step} шаг из 3</span>
+          <h2 className='reg-title'>Регистрация успешна</h2>
         </div>
-        {step === 1 && (
         <div className='reg-inputs'>
-          <div className='reg-container'>
-            <input className='reg-input' id='username' type='text' required='required'
-              {...register('username', {required: 'Поле не может быть пустым'})}/>
-            <label htmlFor='username' className='reg-label'>Придумайте логин для входа</label>
-            {errors.username?.message ? <span className='error'>{errors.username?.message}</span> : <span>Используйте для логина латинский алфавит и цифры</span>}
+          <p className='reg-again'>Регистрация прошла успешно. Зайдите в личный кабинет, используя свои логин и пароль</p>
+        </div>           
+        <button className='reg-btn-again' type='button'><NavLink to='/auth'>вход</NavLink></button>
+      </div>
+      </div>
+      : 
+      (errorReg) ? 
+        (<div className='reg'>
+          <h1 className='company-title'>Cleverland</h1>
+          <div className='reg-form-err'>
+            <div className='reg-block'>
+              <h2 className='reg-title'>Данные не сохранились</h2>
+            </div>
+            <div className='reg-inputs'>
+            {errorReg.includes('400') ?
+              <p className='reg-again'>Такой логин или e-mail уже записан в системе. Попробуйте зарегистрироваться по другому логину или e-mail</p> :
+              <p className='reg-again'>Что-то пошло не так и ваша регистрация не завершилась. Попробуйте ещё раз</p>
+            }
+            </div>           
+            <button className='reg-btn-again' type='button' onClick={() => {
+                cleanReg(); 
+                }
+              }>
+              <NavLink to='/registration'>назад к регистрации</NavLink>
+            </button>
           </div>
-          <div className='reg-container'>
-            <input className='reg-input' id='password' type='password' required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
-            <label htmlFor='password' className='reg-label'>Пароль</label>
-            {errors.password?.message ? <span className='error'>{errors.password?.message}</span> :
-            <span>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>}
-          </div>
-        </div>
-      )}
-      {step === 2 && (
-        <div className='reg-inputs'>
-          <div className='reg-container'>
-            <input className='reg-input' id='firstName' type='text' required='required' {...register('firstName', {required: 'Поле не может быть пустым'})}/>
-            <label htmlFor='firstName' className='reg-label'>Имя</label>
-            {errors.firstName?.message && <span className='error'>{errors.firstName?.message}</span>}
-          </div>   
-          <div className='reg-container'>
-            <input className='reg-input' id='lastName' type='text' required='required' {...register('lastName', {required: 'Поле не может быть пустым'})}/>
-            <label htmlFor='lastName' className='reg-label'>Фамилия</label>
-            {errors.lastName?.message && <span className='error'>{errors.lastName?.message}</span>}
-          </div>   
-        </div>
-      )}
-      {step === 3 && (
-        <div className='reg-inputs'>
-          <div className='reg-container'>
-            <input className='reg-input' id='phone' type='phone' required='required' {...register('phone', {required: 'Поле не может быть пустым'})}/>
-            <label htmlFor='phone' className='reg-label'>Номер телефона</label>
-            {errors.phone?.message && <span className='error'>{errors.phone?.message}</span>}
-          </div>   
-          <div className='reg-container'>
-            <input className='reg-input' id='email' type='email' required='required'
-            {...register('email', {required: 'Поле не может быть пустым'})}/>
-            <label htmlFor='email' className='reg-label'>E-mai</label>
-            {errors.email?.message && <span className='error'>{errors.email?.message}</span>}
-          </div>  
-        </div>
-      )}
-        {step === 3 ?
-        <button disabled={!isValid} className='reg-btn' type='submit'>зарегистрироваться</button> :
-        <button disabled={!isValid} className='reg-btn' type='submit' onClick={() => {setStep(prevStep => prevStep+1)}}>следующий шаг</button>}
-        <p className='reg-enter'>Есть учётная запись?
-          <NavLink to='/auth' className='reg-login'>войти</NavLink>
-          {(step === 2 || step === 3) &&
-          <NavLink to='/auth' className='reg-login'><RegArrow/></NavLink>}
-        </p>
-      </form>
+        </div>)
+        : 
+        (<div className='reg'>
+          <h1 className='company-title'>Cleverland</h1>
+          <form className='reg-form' onSubmit={handleSubmit(onSubmit)}>
+            <div className='reg-block'>
+              <h2 className='reg-title'>Регистрация</h2>
+              <span className='reg-step'>{step} шаг из 3</span>
+            </div>
+            {step === 1 && (
+            <>
+              <div className='reg-inputs'>
+                <div className='reg-container'>
+                  <input className={errors.username?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='username' type='text' required='required' name='username'  
+                  {...register('username')} onBlur={disabled}/>
+                  <label htmlFor='username' className='reg-label'>Придумайте логин для входа</label>
+                  <span className='error-span'>{light(errors.username?.message, 'Используйте для логина латинский алфавит и цифры')}</span>
+                </div>
+                <div className='reg-container'>
+                  <input className={errors.password?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='password' type={type} required='required' 
+                  {...register("password")} onBlur={disabled2}/>
+                  <label htmlFor='password' className='reg-label'>Пароль</label>
+                  <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
+                  {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check/></p>}
+                  {errors.password?.type === 'required' ? <span className='error-span'><span className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span></span> :
+                    errors.password?.message ? 
+                    <span className='error-span'>Пароль <span className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, <span className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и <span className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
+                    <span className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
+                    }
+                </div>
+              </div>
+              <button disabled={disabled} className='reg-btn' type='button' onClick={() => {setStep(prevStep => prevStep+1)}}>следующий шаг</button>
+            </>
+          )}
+          {step === 2 && (
+            <>
+              <div className='reg-inputs'>
+                <div className='reg-container'>
+                  <input className={errors.firstName?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='firstName' type='text' required='required' 
+                  {...register('firstName')}/>
+                  <label htmlFor='firstName' className='reg-label'>Имя</label>
+                  {errors.firstName?.message && <span className='error'>{errors.firstName?.message}</span>}
+                </div>   
+                <div className='reg-container'>
+                  <input className={errors.lastName?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='lastName' type='text' required='required' 
+                  {...register('lastName')}/>
+                  <label htmlFor='lastName' className='reg-label'>Фамилия</label>
+                  {errors.lastName?.message && <span className='error'>{errors.lastName?.message}</span>}
+                </div>   
+              </div>
+              <button disabled={disabled2} className='reg-btn' type='submit' onClick={() => {setStep(prevStep => prevStep+1)}}>последний шаг</button>
+            </>
+          )}
+          {step === 3 && (
+            <>
+              <div className='reg-inputs'>
+                <div className='reg-container'>
+                <InputMask className={(errors.phone?.type === 'required' || errors.phone?.type === 'matches') ? 'reg-input-warn' : 'reg-input'}  id='phone' type='tel' required='required' 
+                  {...register('phone')} mask='+375 (**) 999-99-99' maskChar='x' formatChars={formatChars}
+                  />
+                  <label htmlFor='phone' className='reg-label'>Номер телефона</label>
+                  {(errors.phone?.message) ? <span className='error'>В формате +375 (xx) xxx-xx-xx</span> : <span className='error-span'>В формате +375 (xx) xxx-xx-xx</span>}
+                </div>   
+                <div className='reg-container'>
+                  <input className={errors.email?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='email' type='text' required='required' 
+                  {...register('email')}/>
+                  <label htmlFor='email' className='reg-label'>E-mail</label>
+                  <span className='error'>{errors.email?.message}</span>
+                </div>  
+              </div>
+              <button disabled={!isValid} className='reg-btn' type='submit'>зарегистрироваться</button>
+            </>
+          )}
+            <p className='reg-enter'>Есть учётная запись?
+              <NavLink to='/auth' className='reg-login'>войти</NavLink>
+              {(step === 2 || step === 3) &&
+              <NavLink to='/auth' className='reg-login'><RegArrow/></NavLink>}
+            </p>
+          </form>
+        </div>)
+    }
     </div>
   </div>
   )

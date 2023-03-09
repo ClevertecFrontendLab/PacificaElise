@@ -15,7 +15,9 @@ const initialState = {
 const regSlice = createSlice({
   name: '@@reg',
   initialState,
-  reducers: {},
+  reducers: {
+    clearReg: () => initialState,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchRegister.pending, (state) => {
@@ -41,4 +43,4 @@ export const selectRegInfo = (state) => ({
   errorReg: state.reg.error,
 });
 
-export const selectIsReg = (state) => Boolean(state.reg.regdata);
+export const { clearReg } = regSlice.actions;

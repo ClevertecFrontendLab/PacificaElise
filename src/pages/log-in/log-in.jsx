@@ -1,15 +1,23 @@
+/* eslint-disable */
+
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Navigate } from 'react-router-dom';
 import { loadUserData, selectIsAuth, selectUserInfo, dropError } from '../../features/auth/auth-slice';
+import {ReactComponent as ClosedEye} from '../../imgs/icons/closed-eye.svg';
+import {ReactComponent as OpenedEye} from '../../imgs/icons/opened-eye.svg';
+
 import './log-in.scss';
 
 export const LogIn = () => { 
   const dispatch = useDispatch();
   const {errorAuth, statusAuth} = useSelector(selectUserInfo);
   const isAuth = useSelector(selectIsAuth);
+  const [toggleIcon, setToggleIcon] = useState(<ClosedEye/>);
+  const [type, setType] = useState('password');
 
-  const { register, formState: {errors, isValid}, setError, handleSubmit } = useForm({
+  const { register, formState: {errors, isValid, isDirty}, setError, handleSubmit } = useForm({
     defaultValues: {
       identifier: 'pihoozzz',
       password: '5123260'
@@ -35,6 +43,16 @@ export const LogIn = () => {
     dispatch(dropError());
   }
 
+  const togglePassInput = () => {
+    if (type === 'password') {
+      setType('text');
+      setToggleIcon(<OpenedEye/>)
+    } else {
+      setType('password');
+      setToggleIcon(<ClosedEye/>)
+    }
+  }
+console.log(!isValid)
   return (
     <div className='loader-wrapper'>
     {statusAuth === 'loading' ?
@@ -60,17 +78,17 @@ export const LogIn = () => {
         null
       }
       <div className={statusAuth === 'loading' ? 'login-wrapper blur' : 'login-wrapper'}>
-        {errorAuth ? 
+        {errorAuth && !errorAuth.includes('400') ? 
           <div className='login'>
             <h1 className='company-title'>Cleverland</h1>
-            <div className={errorAuth ? 'login-form center' : 'login-form'}>
+            <div className='login-form-err'>
               <div className='login-block'>
                 <h2 className='login-title'>Вход не выполнен</h2>
               </div>
               <div className='login-inputs'>
-                <p className='forgot-password'>Что-то пошло не так. Попробуйте ещё раз.</p>
+                <p className='login-again'>Что-то пошло не так. Попробуйте ещё раз.</p>
               </div>           
-              <button className='login-btn' type='button'><NavLink to='/auth' onClick={removeError}>повторить</NavLink></button>
+              <button className='login-btn-again' type='button'><NavLink to='/auth' onClick={removeError}>повторить</NavLink></button>
             </div>
           </div>
           : 
@@ -82,18 +100,25 @@ export const LogIn = () => {
               </div>
               <div className='login-inputs'>
                 <div className='login-container'>
-                  <input className={errors.identifier ? 'login-input borderline' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
+                  <input className={errors.identifier?.type === 'required' ? 'login-input-warn' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
                   <label htmlFor='identifier' className='login-label'>Логин</label>  
                   <span className='error'>{errors.identifier?.message}</span>
                 </div> 
                 <div className='login-container'>
-                  <input className={errors.password ? 'login-input borderline' : 'login-input'} id='password' type='password' required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
+                  <input className={errors.password?.type === 'required' ? 'login-input-warn' : 'login-input'} id='password' type={type} required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
                   <label htmlFor='password' className='login-label'>Пароль</label>
+                  <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
                   <span className='error'>{errors.password?.message}</span>
-                  <NavLink to='/forgot-password' className='forgot-password'>Забыли логин или пароль?</NavLink>
+                  {errorAuth?.includes('400') ?
+                    <div className='login-error-message'>
+                      <span className='restore-password warn'>Неверный логин или пароль!</span>
+                      <NavLink className='restore-password'>Восстановить?</NavLink>
+                    </div> :
+                    <NavLink className='forgot-password'>Забыли логин или пароль?</NavLink>
+                    }
                 </div>   
               </div>           
-              <button className='login-btn' type='submit'>вход</button>
+              <button ddisabled={!isValid} className='login-btn' type='submit'>вход</button>
               <p className='login-enter'>Нет учётной записи?
                 <NavLink to='/registration' className='login-reg'>регистрация</NavLink>
               </p>

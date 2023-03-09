@@ -1,4 +1,18 @@
+/*
+@font-face {
+	font-family: 'fontello';
+	src: url('../../font/fontello.eot?0000');
+	src: url('../../font/fontello.eot?0000#iefix') format('embedded-opentype'),
+      url('../../font/fontello.woff2?0000') format('woff2'),
+      url('../../font/fontello.woff?0000') format('woff'),
+      url('../../font/fontello.ttf?0000') format('truetype'),
+      url('../../font/fontello.svg?0000#fontello') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+*/
 @import '../../global.scss';
+
 .loader-wrapper {
   width: 100%;
   min-height: 100vh;
@@ -19,6 +33,10 @@
   filter: blur(10px);
 }
 
+.hightlight {
+  color: #F42C4F;
+}
+
 .reg {
   width: 100vw;
   height: 100vh;
@@ -35,6 +53,43 @@
     font-size: 32px;
     line-height: 1.25;
     color: #FFFFFF;
+  }
+
+  .reg-form-err {
+    margin-top: 113px;
+    width: 600px;
+    height: 314px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 96px;
+    gap: 32px;
+
+    .reg-again {
+      text-align: center;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #363636;
+    }
+
+    .reg-btn-again {
+      width: 100%;
+      height: 52px;
+      background: $btn-color;
+      border-radius: 30px;
+      padding: 14px 95px;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      border: none;
+    }
   }
 
   .reg-form {
@@ -97,7 +152,23 @@
             pointer-events: none;
           }
 
-          span {
+          .check-icon {
+            position: absolute;
+            top: 19px;
+            right: 40px;
+            border: none;
+            background: transparent;
+          }
+
+          .eye-icon {
+            position: absolute;
+            top: 19px;
+            right: 12px;
+            border: none;
+            background: transparent;
+          }
+          
+          .error-span {
             position: absolute;
             top: 60px;
             left: 12px;
@@ -109,7 +180,10 @@
             mix-blend-mode: normal;
           }
 
-          .reg {
+          .error {
+            position: absolute;
+            top: 60px;
+            left: 12px;
             margin-left: 12px;
             font-weight: 500;
             font-size: 12px;
@@ -127,6 +201,7 @@
             height: 56px;
             border: none;
             padding: 20px 0px 0px 12px;
+            // font-family: "fontello";
             font-size: 14px;
             line-height: 1.29;
             color: #363636;
@@ -135,8 +210,36 @@
             border-bottom: solid 1px #BFC4C9;
           }
 
+          .reg-input-warn {
+            position: absolute;
+            box-sizing: border-box;
+            background: #F9F9FA;
+            border-radius: 4px;
+            width: 100%;
+            height: 56px;
+            border: none;
+            padding: 20px 0px 0px 12px;
+            // font-family: "fontello";
+            font-size: 14px;
+            line-height: 1.29;
+            color: #363636;
+            mix-blend-mode: normal;
+            outline: none;
+            border-bottom: solid 1px #F42C4F;
+          }
+          
           .reg-input:focus + .reg-label,
           .reg-input:valid + .reg-label {
+            transform: translateY(-12px);
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 1.33;
+            letter-spacing: 0.2px;
+            color: #A7A7A7;          
+          }
+
+          .reg-input-warn:focus + .reg-label,
+          .reg-input-warn:valid + .reg-label {
             transform: translateY(-12px);
             font-weight: 500;
             font-size: 12px;
