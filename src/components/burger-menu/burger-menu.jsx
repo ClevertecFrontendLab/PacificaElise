@@ -144,7 +144,7 @@ export const BurgerMenu = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/auth'
+              <NavLink className={({ isActive }) => isActive ? 'active-link-underline' : ''} to='/auth' data-test-id='exit-button'
                 onClick={() => {
                   functionBlock(); 
                   handleLogOut()}}>

@@ -79,10 +79,10 @@ export const RegistrationPage = () => {
   const togglePassInput = () => {
     if (type === 'password') {
       setType('text');
-      setToggleIcon(<OpenedEye/>)
+      setToggleIcon(<OpenedEye data-test-id='eye-opened'/>)
     } else {
       setType('password');
-      setToggleIcon(<ClosedEye/>)
+      setToggleIcon(<ClosedEye data-test-id='eye-closed'/>)
     }
   }
 
@@ -99,7 +99,7 @@ export const RegistrationPage = () => {
       return string.split(regexp).map((str, index, array) => {
         if (index < array.length - 1) {
           const match = matchValue.shift()
-          return <>{str}<span className='hightlight' key={index}>{match}</span></>
+          return <>{str}<span data-test-id='hint' className='hightlight' key={index}>{match}</span></>
         }
         return str
       })
@@ -118,7 +118,7 @@ export const RegistrationPage = () => {
   };
   
   return (
-  <div className='loader-wrapper'>
+  <div className='loader-wrapper' data-test-id='auth'>
     {statusReg === 'loading' ?
       <div data-test-id='loader' className='loader'>
         <svg width="70" height="68" viewBox="0 0 70 68" fill="none">
@@ -145,7 +145,7 @@ export const RegistrationPage = () => {
     {statusReg === 'recieved' ? 
       <div className='reg'>
       <h1 className='company-title'>Cleverland</h1>
-      <div className='reg-form-err'>
+      <div className='reg-form-err' data-test-id='status-block'>
         <div className='reg-block'>
           <h2 className='reg-title'>Регистрация успешна</h2>
         </div>
@@ -159,7 +159,7 @@ export const RegistrationPage = () => {
       (errorReg) ? 
         (<div className='reg'>
           <h1 className='company-title'>Cleverland</h1>
-          <div className='reg-form-err'>
+          <div className='reg-form-err' data-test-id='status-block'>
             <div className='reg-block'>
               <h2 className='reg-title'>Данные не сохранились</h2>
             </div>
@@ -180,7 +180,7 @@ export const RegistrationPage = () => {
         : 
         (<div className='reg'>
           <h1 className='company-title'>Cleverland</h1>
-          <form className='reg-form' onSubmit={handleSubmit(onSubmit)}>
+          <form className='reg-form' onSubmit={handleSubmit(onSubmit)} data-test-id='register-form'>
             <div className='reg-block'>
               <h2 className='reg-title'>Регистрация</h2>
               <span className='reg-step'>{step} шаг из 3</span>
@@ -199,10 +199,14 @@ export const RegistrationPage = () => {
                   {...register("password")}/>
                   <label htmlFor='password' className='reg-label'>Пароль</label>
                   <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
-                  {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check/></p>}
-                  {errors.password?.type === 'required' ? <span className='error-span'><span className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span></span> :
+                  {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check data-test-id='checkmark'/></p>}
+                  {errors.password?.type === 'required' ? 
+                  <span className='error-span'><span data-test-id='hint' className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
+                  </span> :
                     errors.password?.message ? 
-                    <span className='error-span'>Пароль <span className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, <span className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и <span className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
+                    <span className='error-span'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
+                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и 
+                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
                     <span className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
                     }
                 </div>
@@ -217,14 +221,14 @@ export const RegistrationPage = () => {
                   <input className={errors.firstName?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='firstName' type='text' required='required'  
                   {...register('firstName')}/>
                   <label htmlFor='firstName' className='reg-label'>Имя</label>
-                  <span className='error'>{errors.firstName?.message}</span>
+                  <span data-test-id='hint' className='error'>{errors.firstName?.message}</span>
                 </div>
                   
                 <div className='reg-container'>
                   <input className={errors.lastName?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='lastName' type='text' required='required'   
                   {...register('lastName')}/>
                   <label htmlFor='lastName' className='reg-label'>Фамилия</label>
-                  <span className='error'>{errors.lastName?.message}</span>
+                  <span data-test-id='hint' className='error'>{errors.lastName?.message}</span>
                 </div>
               </div>
               <button disabled={disabled2} className='reg-btn' type='button' onClick={() => {setStep(prevStep => prevStep+1)}}>последний шаг</button>
@@ -238,13 +242,13 @@ export const RegistrationPage = () => {
                   {...register('phone')} mask='+375 (**) 999-99-99' maskChar='x' formatChars={formatChars}
                   />
                   <label htmlFor='phone' className='reg-label'>Номер телефона</label>
-                  {(errors.phone?.message) ? <span className='error'>В формате +375 (xx) xxx-xx-xx</span> : <span className='error-span'>В формате +375 (xx) xxx-xx-xx</span>}
+                  {(errors.phone?.message) ? <span data-test-id='hint' className='error'>В формате +375 (xx) xxx-xx-xx</span> : <span data-test-id='hint' className='error-span'>В формате +375 (xx) xxx-xx-xx</span>}
                 </div>   
                 <div className='reg-container'>
                   <input className={errors.email?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='email' type='text' required='required' 
                   {...register('email')}/>
                   <label htmlFor='email' className='reg-label'>E-mail</label>
-                  <span className='error'>{errors.email?.message}</span>
+                  <span data-test-id='hint' className='error'>{errors.email?.message}</span>
                 </div>  
               </div>
               <button disabled={!isValid} className='reg-btn' type='submit'>зарегистрироваться</button>

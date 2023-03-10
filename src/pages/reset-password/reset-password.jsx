@@ -51,15 +51,15 @@ export const ResetPassword = () => {
   const togglePassConfirmInput = () => {
     if (typeConfirm === 'password') {
       setTypeConfirm('text');
-      setToggleIconConfirm(<OpenedEye/>)
+      setToggleIconConfirm(<OpenedEye data-test-id='eye-opened'/>)
     } else {
       setTypeConfirm('password');
-      setToggleIconConfirm(<ClosedEye/>)
+      setToggleIconConfirm(<ClosedEye data-test-id='eye-closed'/>)
     }
   }
 
   return (
-    <div className='loader-wrapper'>
+    <div className='loader-wrapper' data-test-id='auth'>
     {statusResetPass === 'loading' ?
         <div data-test-id='loader' className='loader'>
           <svg width="70" height="68" viewBox="0 0 70 68" fill="none">
@@ -86,7 +86,7 @@ export const ResetPassword = () => {
       {statusResetPass === 'recieved' ? 
         <div className='reset-pass'>
         <h1 className='company-title'>Cleverland</h1>
-        <div className='reset-pass-form-suc'>
+        <div className='reset-pass-form-suc' data-test-id='status-block'>
           <div className='reset-pass-block'>
             <h2 className='reset-pass-title'>Новые данные сохранены</h2>
           </div>
@@ -100,7 +100,7 @@ export const ResetPassword = () => {
         (errorResetPass) ?
         <div className='reset-pass'>
         <h1 className='company-title'>Cleverland</h1>
-        <div className='reset-pass-form-suc'>
+        <div className='reset-pass-form-suc' data-test-id='status-block'>
           <div className='reset-pass-block'>
             <h2 className='reset-pass-title'>Данные не сохранились</h2>
           </div>
@@ -112,7 +112,7 @@ export const ResetPassword = () => {
         </div> :
         <div className='reset-pass'>
           <h1 className='company-title'>Cleverland</h1>
-          <form className='reset-pass-form' onSubmit={handleSubmit(onSubmit)}>
+          <form className='reset-pass-form' onSubmit={handleSubmit(onSubmit)} data-test-id='reset-password-form'>
             <div className='reset-pass-block'>
               <h2 className='reset-pass-title'>Восстановление пароля</h2>
             </div>
@@ -122,10 +122,13 @@ export const ResetPassword = () => {
                   {...register("password")}/>
                   <label htmlFor='password' className='reset-pass-label'>Пароль</label>
                   <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
-                  {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check/></p>}
-                  {errors.password?.type === 'required' ? <span className='error-span'><span className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span></span> :
+                  {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check data-test-id='checkmark'/></p>}
+                  {errors.password?.type === 'required' ? <span className='error-span'><span className='hightlight' data-test-id='hint'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
+                  </span> :
                     errors.password?.message ? 
-                    <span className='error-span'>Пароль <span className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, <span className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и <span className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
+                    <span className='error-span'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
+                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и 
+                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
                     <span className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
                     }
               </div>
@@ -134,7 +137,7 @@ export const ResetPassword = () => {
                   {...register("passwordConfirmation")}/>
                   <label htmlFor='passwordConfirmation' className='reset-pass-label'>Пароль</label>
                   <button type='button' className='eye-icon' onClick={togglePassConfirmInput}>{toggleIconConfirm}</button>
-                  {errors.passwordConfirmation?.type === 'oneOf' && <span className='error-span'><span className='hightlight'>Пароли не совпадают</span></span> }
+                  {errors.passwordConfirmation?.type === 'oneOf' && <span className='error-span'><span className='hightlight' data-test-id='hint'>Пароли не совпадают</span></span> }
               </div>
             </div>           
             <button className='reset-pass-btn' disabled={getFieldState('passwordConfirmation').invalid} type='submit'>сохранить изменения</button>

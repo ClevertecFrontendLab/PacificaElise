@@ -44,7 +44,7 @@ export const ForgotPassword = () => {
   }
 
   return (
-    <div className='loader-wrapper'>
+    <div className='loader-wrapper' data-test-id='auth'>
       {statusForgotPass === 'loading' ?
         <div data-test-id='loader' className='loader'>
           <svg width="70" height="68" viewBox="0 0 70 68" fill="none">
@@ -71,7 +71,7 @@ export const ForgotPassword = () => {
       {statusForgotPass === 'recieved' ? 
         <div className='forgotpass'>
         <h1 className='company-title'>Cleverland</h1>
-        <div className='forgotpass-form-suc'>
+        <div className='forgotpass-form-suc' data-test-id='status-block'>
           <div className='forgotpass-block'>
             <h2 className='forgotpass-title'>Письмо выслано</h2>
           </div>
@@ -83,7 +83,7 @@ export const ForgotPassword = () => {
         : 
         <div className='forgotpass'>
           <h1 className='company-title'>Cleverland</h1>
-          <form className='forgotpass-form' onSubmit={handleSubmit(onSubmit)}>
+          <form className='forgotpass-form' onSubmit={handleSubmit(onSubmit)} data-test-id='send-email-form'>
             <div className='forgotpass-profile'><NavLink to='/profile'><EnterArrow/>вход в личный кабинет</NavLink></div>
             <div className='forgotpass-block'>
               <h2 className='forgotpass-title'>Восстановление пароля</h2>
@@ -93,7 +93,7 @@ export const ForgotPassword = () => {
                 <input className={(errors.email?.type === 'required' || errorForgotPass) ? 'forgotpass-input-warn' : 'forgotpass-input'} id='email' type='text' required='required' 
                 {...register('email')}/>
                 <label htmlFor='email' className='forgotpass-label'>Email</label>
-                {errorForgotPass ? <span className='error'>{errorForgotPass}</span> : <span className='error'>{errors.email?.message}</span>}
+                {errorForgotPass ? <span data-test-id='hint' className='error'>{errorForgotPass}</span> : <span data-test-id='hint' className='error'>{errors.email?.message}</span>}
                 <span>На это email будет отправлено письмо с инструкциями по восстановлению пароля</span>
               </div>   
             </div>           

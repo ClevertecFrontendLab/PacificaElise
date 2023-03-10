@@ -54,7 +54,7 @@ export const LogIn = () => {
   }
 
   return (
-    <div className='loader-wrapper'>
+    <div className='loader-wrapper' data-test-id='auth'>
     {statusAuth === 'loading' ?
         <div data-test-id='loader' className='loader'>
           <svg width="70" height="68" viewBox="0 0 70 68" fill="none">
@@ -81,7 +81,7 @@ export const LogIn = () => {
         {errorAuth && !errorAuth.includes('400') ? 
           <div className='login'>
             <h1 className='company-title'>Cleverland</h1>
-            <div className='login-form-err'>
+            <div className='login-form-err' data-test-id='status-block'>
               <div className='login-block'>
                 <h2 className='login-title'>Вход не выполнен</h2>
               </div>
@@ -94,7 +94,7 @@ export const LogIn = () => {
           : 
           <div className='login'>
             <h1 className='company-title'>Cleverland</h1>
-            <form className='login-form' onSubmit={handleSubmit(onSubmit)}>
+            <form className='login-form' onSubmit={handleSubmit(onSubmit)} data-test-id='auth-form'>
               <div className='login-block'>
                 <h2 className='login-title'>Вход в личный кабинет</h2>
               </div>
@@ -102,13 +102,13 @@ export const LogIn = () => {
                 <div className='login-container'>
                   <input className={errors.identifier?.type === 'required' ? 'login-input-warn' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
                   <label htmlFor='identifier' className='login-label'>Логин</label>  
-                  <span className='error'>{errors.identifier?.message}</span>
+                  <span className='error' data-test-id='hint'>{errors.identifier?.message}</span>
                 </div> 
                 <div className='login-container'>
                   <input className={errors.password?.type === 'required' ? 'login-input-warn' : 'login-input'} id='password' type={type} required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
                   <label htmlFor='password' className='login-label'>Пароль</label>
                   <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
-                  <span className='error'>{errors.password?.message}</span>
+                  <span className='error' data-test-id='hint'>{errors.password?.message}</span>
                   {errorAuth?.includes('400') ?
                     <div className='login-error-message'>
                       <span className='restore-password warn'>Неверный логин или пароль!</span>
