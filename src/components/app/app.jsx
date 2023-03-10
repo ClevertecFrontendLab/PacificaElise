@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { Route, Routes, Navigate} from 'react-router-dom';
+import { Route, Routes, Navigate, useSearchParams} from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { Layout } from '../layout/layout';
@@ -15,18 +15,19 @@ import { RegistrationPage } from '../../pages/registration';
 import { LogIn } from '../../pages/log-in';
 import {ForgotPassword} from '../../pages/forgot-password';
 import { selectIsStorage } from '../../features/auth/auth-slice';
-import { RestorePassword } from '../../pages/restore-password/restore-password';
+import { ResetPassword } from '../../pages/reset-password/reset-password';
 
 export const App = () => {
   const isStorage = useSelector(selectIsStorage);
+  const [searchParams] = useSearchParams();
+  const code =searchParams.get('code');
 
   return (
     <Routes>
       <Route path='/' element = {<Navigate to={isStorage? '/auth' : '/registration'}/>}/>
       <Route path='/auth' element={<LogIn />} />
       <Route path='/registration' element={<RegistrationPage />} />
-      <Route path='/forgot-password' element={<ForgotPassword />} />
-      <Route path='/forgot-pass' element={<RestorePassword />} />
+      <Route path='/forgot-pass' element={code ? <ResetPassword /> : <ForgotPassword />} />
       <Route path='/' element={<Layout />} >
         <Route path='books/' element={<LayoutMainPage />}>
             <Route path=':bookCategory' element={<BooksList />} />

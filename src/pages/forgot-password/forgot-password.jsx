@@ -12,6 +12,7 @@ import './forgot-password.scss';
 import { fetchGetPassword, selectForgotPassInfo } from '../../features/forgot-password/forgot-password-slice';
 
 export const ForgotPassword = () => { 
+  
   const dispatch = useDispatch();
   const {errorForgotPass, statusForgotPass} = useSelector(selectForgotPassInfo);
   const isAuth = useSelector(selectIsAuth);

@@ -114,7 +114,7 @@ export const LogIn = () => {
                       <span className='restore-password warn'>Неверный логин или пароль!</span>
                       <NavLink className='restore-password'>Восстановить?</NavLink>
                     </div> :
-                    <NavLink className='forgot-password' to='/forgot-password'>Забыли логин или пароль?</NavLink>
+                    <NavLink className='forgot-password' to='/forgot-pass'>Забыли логин или пароль?</NavLink>
                     }
                 </div>   
               </div>           

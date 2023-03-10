@@ -12,6 +12,7 @@ import { toogleErrorToastReducer } from './features/toggle-error-toast/toggle-er
 import { authReducer } from './features/auth/auth-slice';
 import { regReducer } from './features/reg/reg-slice';
 import { forgotPassReducer } from './features/forgot-password/forgot-password-slice';
+import { resetPassReducer } from './features/reset-password/reset-password-slice';
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     auth: authReducer,
     reg: regReducer,
     forgotPass: forgotPassReducer,
+    resetPass: resetPassReducer,
   },
   devTools: true,
   middleware: (getDefaultMiddleware) =>
