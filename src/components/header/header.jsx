@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+/* eslint-disable */
 import { Logo } from '../logo/logo';
 import { PersonalInput } from '../personal-input/personal-input';
 import { BurgerMenu } from '../burger-menu/burger-menu';
@@ -12,9 +12,7 @@ export const Header = () => (
         <Logo />
       <h1 className='title'>Библиотека</h1>
     </div>
-    <NavLink className='personal-profile' to='/profile'>
-      <PersonalInput/>
-    </NavLink>
+    <PersonalInput/>
   </header>
 );
 

@@ -11,7 +11,7 @@ import { setToogleErrorToast } from '../../features/toggle-error-toast/toggle-er
 import { ReactComponent as Arrow } from '../../imgs/icons/arrow.svg';
 
 import './burger-menu.scss';
-import { logOut, selectIsStorage } from '../../features/auth/auth-slice';
+import { logOut } from '../../features/auth/auth-slice';
 
 export const BurgerMenu = () => {
   const dispatch = useDispatch();
