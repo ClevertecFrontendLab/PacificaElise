@@ -21,6 +21,8 @@ export const ResetPassword = () => {
   const [type, setType] = useState('password');
   const [toggleIconConfirm, setToggleIconConfirm] = useState(<ClosedEye/>);
   const [typeConfirm, setTypeConfirm] = useState('password');
+  const [eye, setEye] = useState(false);
+  const [eyeConfirm, setEyeConfirm] = useState(false);
   
   const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
@@ -41,20 +43,20 @@ export const ResetPassword = () => {
   const togglePassInput = () => {
     if (type === 'password') {
       setType('text');
-      setToggleIcon(<OpenedEye/>)
+      setToggleIcon(<OpenedEye/>);
     } else {
       setType('password');
-      setToggleIcon(<ClosedEye/>)
+      setToggleIcon(<ClosedEye/>);
     }
   }
 
   const togglePassConfirmInput = () => {
     if (typeConfirm === 'password') {
       setTypeConfirm('text');
-      setToggleIconConfirm(<OpenedEye data-test-id='eye-opened'/>)
+      setToggleIconConfirm(<OpenedEye/>);
     } else {
       setTypeConfirm('password');
-      setToggleIconConfirm(<ClosedEye data-test-id='eye-closed'/>)
+      setToggleIconConfirm(<ClosedEye/>);
     }
   }
 
@@ -117,26 +119,27 @@ export const ResetPassword = () => {
               <h2 className='reset-pass-title'>Восстановление пароля</h2>
             </div>
             <div className='reset-pass-inputs'>  
-              <div className='reset-pass-container'>
-                  <input className={errors.password?.type === 'required' ? 'reset-pass-input-warn' : 'reset-pass-input'} id='password' type={type} required='required' 
-                  {...register("password")}/>
-                  <label htmlFor='password' className='reset-pass-label'>Пароль</label>
-                  <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
-                  {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check data-test-id='checkmark'/></p>}
-                  {errors.password?.type === 'required' ? <span className='error-span'><span className='hightlight' data-test-id='hint'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
-                  </span> :
-                    errors.password?.message ? 
-                    <span className='error-span'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
-                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и 
-                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
-                    <span className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
-                    }
+            <div className='reset-pass-container'>
+              <input className={errors.password?.type === 'required' ? 'reset-pass-input-warn' : 'reset-pass-input'} id='password' type={type} required='required' 
+              {...register("password")} onFocus={() => setEye(true)}/>
+              <label htmlFor='password' className='reset-pass-label'>Пароль</label>
+              {eye ? <button type='button' className='eye-icon'  data-test-id={type === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassInput}>{toggleIcon}</button> : null}
+              {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check data-test-id='checkmark'/></p>}
+              {errors.password?.type === 'required' ? 
+              <span className='error-span'><span data-test-id='hint' className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
+              </span> :
+                errors.password?.message ? 
+                <span className='error-span'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
+                <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и 
+                <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
+                <span className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
+                }
               </div>
               <div className='reset-pass-container'>
                   <input className={(errors.passwordConfirmation?.type === 'required' || errors.passwordConfirmation?.type === 'oneOf') ? 'reset-pass-input-warn' : 'reset-pass-input'} id='passwordConfirmation' type={typeConfirm} required='required' 
-                  {...register("passwordConfirmation")}/>
-                  <label htmlFor='passwordConfirmation' className='reset-pass-label'>Пароль</label>
-                  <button type='button' className='eye-icon' onClick={togglePassConfirmInput}>{toggleIconConfirm}</button>
+                  {...register("passwordConfirmation")} onFocus={() => setEyeConfirm(true)}/>
+                  <label htmlFor='passwordConfirmation' className='reset-pass-label'>Повторите пароль</label>
+                  {eyeConfirm ? <button type='button' className='eye-icon' data-test-id={typeConfirm === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassConfirmInput}>{toggleIconConfirm}</button> : null}
                   {errors.passwordConfirmation?.type === 'oneOf' && <span className='error-span'><span className='hightlight' data-test-id='hint'>Пароли не совпадают</span></span> }
               </div>
             </div>           

@@ -1,5 +1,5 @@
 /* eslint-disable */
-
+import {useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Navigate } from 'react-router-dom';
@@ -23,12 +23,17 @@ export const ForgotPassword = () => {
     formState: { errors },
     handleSubmit,
     reset,
+    setFocus
   } = useForm({
     mode: 'all',
     criteriaMode: "all",
     resolver: yupResolver(ForgotpassSchema),
   }
   );
+
+  useEffect(() => {
+    setFocus('email');
+  }, []);
 
   if (isStorage) {
     return <Navigate to='/auth'/>
@@ -93,7 +98,7 @@ export const ForgotPassword = () => {
                 <input className={(errors.email?.type === 'required' || errorForgotPass) ? 'forgotpass-input-warn' : 'forgotpass-input'} id='email' type='text' required='required' 
                 {...register('email')}/>
                 <label htmlFor='email' className='forgotpass-label'>Email</label>
-                {errorForgotPass ? <span data-test-id='hint' className='error'>{errorForgotPass}</span> : <span data-test-id='hint' className='error'>{errors.email?.message}</span>}
+                {errorForgotPass ? <span data-test-id='hint' className='error'>error</span> : <span data-test-id='hint' className='error'>{errors.email?.message}</span>}
                 <span>На это email будет отправлено письмо с инструкциями по восстановлению пароля</span>
               </div>   
             </div>           

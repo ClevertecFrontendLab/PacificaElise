@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Navigate } from 'react-router-dom';
@@ -16,20 +16,21 @@ export const LogIn = () => {
   const isAuth = useSelector(selectIsAuth);
   const [toggleIcon, setToggleIcon] = useState(<ClosedEye/>);
   const [type, setType] = useState('password');
+  const [eye, setEye] = useState(false);
 
-  const { register, formState: {errors, isValid, isDirty}, setError, handleSubmit } = useForm({
-    defaultValues: {
-      identifier: 'pihoozzz',
-      password: '5123260'
-    },
+  const { register, formState: {errors, isValid}, setFocus, handleSubmit } = useForm({
     mode: 'all'
     }
   );
 
+  useEffect(() => {
+    setFocus('identifier');
+  }, []);
+
   const onSubmit = async (values) => {
     localStorage.clear();
     const userData = await dispatch(loadUserData(values));
-    if(userData.payload.data.jwt) {      
+    if(userData.payload !== undefined) {   
       localStorage.setItem('token', userData.payload.data.jwt);
       localStorage.setItem('user', JSON.stringify(userData.payload.data.user));
     }  
@@ -46,10 +47,10 @@ export const LogIn = () => {
   const togglePassInput = () => {
     if (type === 'password') {
       setType('text');
-      setToggleIcon(<OpenedEye/>)
+      setToggleIcon(<OpenedEye/>);
     } else {
       setType('password');
-      setToggleIcon(<ClosedEye/>)
+      setToggleIcon(<ClosedEye/>);
     }
   }
 
@@ -96,23 +97,25 @@ export const LogIn = () => {
             <h1 className='company-title'>Cleverland</h1>
             <form className='login-form' onSubmit={handleSubmit(onSubmit)} data-test-id='auth-form'>
               <div className='login-block'>
-                <h2 className='login-title'>Вход в личный кабинет</h2>
+                <h2 className='login-title'>Bход в личный кабинет</h2>
               </div>
               <div className='login-inputs'>
                 <div className='login-container'>
-                  <input className={errors.identifier?.type === 'required' ? 'login-input-warn' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
+                  <input className={(errors.identifier?.type === 'required' || errorAuth?.includes('400')) ? 'login-input-warn' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
                   <label htmlFor='identifier' className='login-label'>Логин</label>  
                   <span className='error' data-test-id='hint'>{errors.identifier?.message}</span>
                 </div> 
                 <div className='login-container'>
-                  <input className={errors.password?.type === 'required' ? 'login-input-warn' : 'login-input'} id='password' type={type} required='required' {...register('password', {required: 'Поле не может быть пустым'})}/>
+                  <input className={(errors.password?.type === 'required' || errorAuth?.includes('400')) ? 'login-input-warn' : 'login-input'} id='password' type={type} required='required' 
+                  {...register('password', {required: 'Поле не может быть пустым'})}
+                  onFocus={() => setEye(true)}/>
                   <label htmlFor='password' className='login-label'>Пароль</label>
-                  <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
+                  {eye ? <button type='button' className='eye-icon' data-test-id={type === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassInput}>{toggleIcon}</button> : null}
                   <span className='error' data-test-id='hint'>{errors.password?.message}</span>
                   {errorAuth?.includes('400') ?
                     <div className='login-error-message'>
-                      <span className='restore-password warn'>Неверный логин или пароль!</span>
-                      <NavLink className='restore-password'>Восстановить?</NavLink>
+                      <span className='restore-password warn' data-test-id='hint'>Неверный логин или пароль!</span>
+                      <NavLink to='/forgot-pass' className='restore-password'>Восстановить?</NavLink>
                     </div> :
                     <NavLink className='forgot-password' to='/forgot-pass'>Забыли логин или пароль?</NavLink>
                     }

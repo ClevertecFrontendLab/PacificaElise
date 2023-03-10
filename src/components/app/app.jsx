@@ -24,7 +24,7 @@ export const App = () => {
 
   return (
     <Routes>
-      <Route path='/' element = {<Navigate to={isStorage? '/auth' : '/registration'}/>}/>
+      <Route path='/' element = {<Navigate to={'/auth'}/>}/>
       <Route path='/auth' element={<LogIn />} />
       <Route path='/registration' element={<RegistrationPage />} />
       <Route path='/forgot-pass' element={code ? <ResetPassword /> : <ForgotPassword />} />

@@ -25,6 +25,7 @@ export const RegistrationPage = () => {
   const {statusReg, errorReg} = useSelector(selectRegInfo);
   const [toggleIcon, setToggleIcon] = useState(<ClosedEye/>);
   const [type, setType] = useState('password');  
+  const [eye, setEye] = useState(false);
 
   const {
     register,
@@ -79,10 +80,10 @@ export const RegistrationPage = () => {
   const togglePassInput = () => {
     if (type === 'password') {
       setType('text');
-      setToggleIcon(<OpenedEye data-test-id='eye-opened'/>)
+      setToggleIcon(<OpenedEye/>)
     } else {
       setType('password');
-      setToggleIcon(<ClosedEye data-test-id='eye-closed'/>)
+      setToggleIcon(<ClosedEye/>)
     }
   }
 
@@ -169,12 +170,18 @@ export const RegistrationPage = () => {
               <p className='reg-again'>Что-то пошло не так и ваша регистрация не завершилась. Попробуйте ещё раз</p>
             }
             </div>           
-            <button className='reg-btn-again' type='button' onClick={() => {
+            { errorReg.includes('400') ? <button className='reg-btn-again' type='button' onClick={() => {
                 cleanReg(); 
                 }
               }>
               <NavLink to='/registration'>назад к регистрации</NavLink>
+            </button> : <button className='reg-btn-again' type='button' onClick={() => {
+                cleanReg(); 
+                }
+              }>
+              <NavLink to='/registration'>повторить</NavLink>
             </button>
+            }
           </div>
         </div>)
         : 
@@ -192,19 +199,24 @@ export const RegistrationPage = () => {
                   <input className={errors.username?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='username' type='text' required='required'  
                   {...register('username')}/>
                   <label htmlFor='username' className='reg-label'>Придумайте логин для входа</label>
-                  <span className='error-span'>{light(errors.username?.message, 'Используйте для логина латинский алфавит и цифры')}</span>
+                  {errors.username?.type === 'required' ? <span data-test-id='hint' className='error'>Поле не может быть пустым</span> :
+                    errors.username?.message ? 
+                    <span className='error-span' data-test-id='hint'>Используйте для логина <span data-test-id='hint' className={(errors.username?.types.matches?.toString().includes('алфавит,цифры') || errors.username?.types?.matches === 'латинский алфавит') && 'hightlight'}>латинский алфавит</span> и
+                    <span data-test-id='hint' className={(errors.username?.types.matches?.toString().includes('алфавит,цифры') || errors.username?.types?.matches === 'цифры') && 'hightlight'}>цифры</span></span> : 
+                    <span className='error-span' data-test-id='hint'>Используйте для логина латинский алфавит и цифры</span>
+                    }
                 </div>
                 <div className='reg-container'>
                   <input className={errors.password?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='password' type={type} required='required' 
-                  {...register("password")}/>
+                  {...register("password")} onFocus={() => setEye(true)}/>
                   <label htmlFor='password' className='reg-label'>Пароль</label>
-                  <button type='button' className='eye-icon' onClick={togglePassInput}>{toggleIcon}</button>
+                  {eye ? <button type='button' className='eye-icon'  data-test-id={type === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassInput}>{toggleIcon}</button> : null}
                   {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check data-test-id='checkmark'/></p>}
                   {errors.password?.type === 'required' ? 
-                  <span className='error-span'><span data-test-id='hint' className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
+                  <span className='error-span' data-test-id='hint'><span data-test-id='hint' className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
                   </span> :
                     errors.password?.message ? 
-                    <span className='error-span'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
+                    <span className='error-span' data-test-id='hint'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
                     <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и 
                     <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
                     <span className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
@@ -242,7 +254,7 @@ export const RegistrationPage = () => {
                   {...register('phone')} mask='+375 (**) 999-99-99' maskChar='x' formatChars={formatChars}
                   />
                   <label htmlFor='phone' className='reg-label'>Номер телефона</label>
-                  {(errors.phone?.message) ? <span data-test-id='hint' className='error'>В формате +375 (xx) xxx-xx-xx</span> : <span data-test-id='hint' className='error-span'>В формате +375 (xx) xxx-xx-xx</span>}
+                  {(errors.phone?.message) ? <span data-test-id='hint' className='error'>{errors.phone?.message}</span> : <span data-test-id='hint' className='error-span'>В формате +375 (xx) xxx-xx-xx</span>}
                 </div>   
                 <div className='reg-container'>
                   <input className={errors.email?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='email' type='text' required='required' 

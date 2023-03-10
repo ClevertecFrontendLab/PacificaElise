@@ -18,7 +18,7 @@ export const RegSchema = yup.object().shape({
   lastName: yup.string().required('Поле не может быть пустым'),
   phone: yup
     .string()
-    .required('В формате +375 (xx) xxx-xx-xx')
+    .required('Поле не может быть пустым')
     .matches(
       /^[+]{1}[0-9]{3} [(]{1}[0-9]{2}[)]{1} [0-9]{3}[-]{1}[0-9]{2}[-]{1}[0-9]{2}$/,
       'В формате +375 (xx) xxx-xx-xx'
@@ -26,7 +26,7 @@ export const RegSchema = yup.object().shape({
   email: yup
     .string()
     .email('Введите корректный e-mail')
-    .required('Введите корректный e-mail')
+    .required('Поле не может быть пустым')
     .matches(
       /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u,
       'Введите корректный e-mail'

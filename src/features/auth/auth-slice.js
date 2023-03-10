@@ -51,3 +51,6 @@ export const { logOut, dropError } = authSlice.actions;
 
 export const selectIsAuth = (state) => Boolean(state.auth.data);
 export const selectIsStorage = () => localStorage.getItem('token');
+
+export const selectUserData = (state) => state.auth.data;
+

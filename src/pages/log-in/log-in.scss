@@ -24,6 +24,10 @@
   color: #F42C4F;
 }
 
+.invisible {
+  display: none;
+}
+
 .login-wrapper {
   .login {
     width: 100vw;
@@ -221,6 +225,15 @@
 
           .login-input:focus + .login-label,
           .login-input:valid + .login-label {
+            transform: translateY(-12px);
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 1.33;
+            letter-spacing: 0.2px;
+            color: #A7A7A7;          
+          }
+
+          .login-input-warn:valid + .login-label {
             transform: translateY(-12px);
             font-weight: 500;
             font-size: 12px;
