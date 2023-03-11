@@ -26,10 +26,15 @@ export const RegistrationPage = () => {
   const [toggleIcon, setToggleIcon] = useState(<ClosedEye/>);
   const [type, setType] = useState('password');  
   const [eye, setEye] = useState(false);
+  const [errUsername, setErrUsername] = useState(false);
+  const [emptyUsername, setEmptyUsername] = useState('');
+  const [errPass, setErrPass] = useState(false);
+  const [emptyPass, setEmptyPass] = useState('');
 
   const {
     register,
     formState: { errors, isValid },
+    setFocus,
     handleSubmit,
     reset,
     getFieldState,
@@ -38,9 +43,21 @@ export const RegistrationPage = () => {
     mode: 'all',
     criteriaMode: "all",
     resolver: yupResolver(RegSchema),
+    defaultValues: {
+      username: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+    }
   }
   );
 
+  useEffect(() => {
+    setFocus('username');
+  }, []);
+  
   const [disabled, setDisabled] = useState(true);
   const [disabled2, setDisabled2] = useState(true);
 
@@ -89,35 +106,12 @@ export const RegistrationPage = () => {
 
   const cleanReg = () => dispatch(clearReg());
 
-  const message = '';
-
-  const Hightlight = (props) => {
-    const {message, string} = props;
-    if (!message) return string;
-    const regexp = new RegExp(message, 'ig');
-    const matchValue = string.match(regexp);  
-    if (matchValue) {
-      return string.split(regexp).map((str, index, array) => {
-        if (index < array.length - 1) {
-          const match = matchValue.shift()
-          return <>{str}<span data-test-id='hint' className='hightlight' key={index}>{match}</span></>
-        }
-        return str
-      })
-    }
-    return string
-  }
-
-  const light = useCallback((message, string) => {
-    return <Hightlight message={message} string={string} />
-  }, [message])
-
 
   const formatChars = {
       '9': '[0-9]',
       '*': '[2,3,4,5,9]'
   };
-  
+
   return (
   <div className='loader-wrapper' data-test-id='auth'>
     {statusReg === 'loading' ?
@@ -196,30 +190,42 @@ export const RegistrationPage = () => {
             <>
               <div className='reg-inputs'>
                 <div className='reg-container'>
-                  <input className={errors.username?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='username' type='text' required='required'  
-                  {...register('username')}/>
+                  <input className={(errUsername===true && emptyUsername === '') ? 'reg-input-warn' : 'reg-input'} id='username' type='text' required='required'  
+                  {...register('username')} onBlur={(e)=>{setErrUsername(true); setEmptyUsername(e.target.value)}} onFocus={()=>setErrUsername(false)} />
                   <label htmlFor='username' className='reg-label'>Придумайте логин для входа</label>
-                  {errors.username?.type === 'required' ? <span data-test-id='hint' className='error'>Поле не может быть пустым</span> :
+                  {(errUsername===true && emptyUsername === '') ?
+                    <span className='error' data-test-id='hint'>Поле не может быть пустым</span> : 
                     errors.username?.message ? 
-                    <span className='error-span' data-test-id='hint'>Используйте для логина <span data-test-id='hint' className={(errors.username?.types.matches?.toString().includes('алфавит,цифры') || errors.username?.types?.matches === 'латинский алфавит') && 'hightlight'}>латинский алфавит</span> и
-                    <span data-test-id='hint' className={(errors.username?.types.matches?.toString().includes('алфавит,цифры') || errors.username?.types?.matches === 'цифры') && 'hightlight'}>цифры</span></span> : 
-                    <span className='error-span' data-test-id='hint'>Используйте для логина латинский алфавит и цифры</span>
+                      (errUsername===false ?
+                        (errors.username?.type === 'required' ? <span data-test-id='hint' className='error-span'>Используйте для логина латинский алфавит и цифры</span> :
+                          <span className='error-span' data-test-id='hint'>Используйте для логина <span data-test-id='hint' className={(errors.username?.types.matches?.toString().includes('алфавит,цифры') || errors.username?.types?.matches === 'латинский алфавит') && 'hightlight'}>латинский алфавит</span> и
+                          <span data-test-id='hint' className={(errors.username?.types.matches?.toString().includes('алфавит,цифры') || errors.username?.types?.matches === 'цифры') && 'hightlight'}>цифры</span></span>) :
+                          ((errUsername===true && emptyUsername !== '' && getFieldState('username').invalid) ? <span data-test-id='hint' className='error'>Используйте для логина латинский алфавит и цифры</span> :
+                          <span className='error-span' data-test-id='hint'>Используйте для логина латинский алфавит и цифры</span>)
+                          ) :
+                      <span className='error-span' data-test-id='hint'>Используйте для логина латинский алфавит и цифры</span>
                     }
                 </div>
                 <div className='reg-container'>
-                  <input className={errors.password?.type === 'required' ? 'reg-input-warn' : 'reg-input'} id='password' type={type} required='required' 
-                  {...register("password")} onFocus={() => setEye(true)}/>
+                  <input className={(errPass===true && emptyPass === '') ? 'reg-input-warn' : 'reg-input'} id='password' type={type} required='required'
+                  {...register('password')} onBlur={(e)=>{setErrPass(true); setEmptyPass(e.target.value)}} onFocus={()=>{setErrPass(false); setEye(true)}} />
                   <label htmlFor='password' className='reg-label'>Пароль</label>
                   {eye ? <button type='button' className='eye-icon'  data-test-id={type === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassInput}>{toggleIcon}</button> : null}
                   {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check data-test-id='checkmark'/></p>}
-                  {errors.password?.type === 'required' ? 
-                  <span className='error-span' data-test-id='hint'><span data-test-id='hint' className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
-                  </span> :
+                  {(errPass===true && emptyPass === '') ?
+                    <span className='error' data-test-id='hint'>Поле не может быть пустым</span> : 
                     errors.password?.message ? 
-                    <span className='error-span' data-test-id='hint'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
+                      (errPass===false ?
+                        (errors.password?.type === 'required' ? <span data-test-id='hint' className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span> :
+                          
+                        <span className='error-span' data-test-id='hint'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
                     <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и 
-                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
-                    <span className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
+                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span>
+                        ) :
+                          ((errPass===true && emptyPass !== '' && getFieldState('password').invalid) ? <span data-test-id='hint' className='error'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span> :
+                          <span className='error-span' data-test-id='hint'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>)
+                          ) :
+                      <span className='error-span' data-test-id='hint'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
                     }
                 </div>
               </div>
@@ -267,9 +273,10 @@ export const RegistrationPage = () => {
             </>
           )}
             <p className='reg-enter'>Есть учётная запись?
-              <NavLink to='/auth' className='reg-login'>войти</NavLink>
-              {(step === 2 || step === 3) &&
-              <NavLink to='/auth' className='reg-login'><RegArrow/></NavLink>}
+              <span>
+                <NavLink to='/auth' className='reg-login'>войти</NavLink>
+                <NavLink to='/auth' className='reg-login'><RegArrow/></NavLink>
+              </span>
             </p>
           </form>
         </div>)

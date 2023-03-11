@@ -21,7 +21,7 @@
 .loader {
   position: absolute;
   z-index: 1500;
-  top: 500px;
+  top: 300px;
   left: 50%;
   width: 70px;
   height: 70px;
@@ -288,4 +288,68 @@
     }
   }
 }
+
+
+@media (max-width: 600px) {
+  .reg {
+    gap: 14px;
+  
+    .company-title {
+      font-size: 18px;
+      line-height: 1.56;
+    }
+  
+    .reg-form-err {
+      width: 288px;
+      height: 466px;
+      padding: 24px 16px;
+    }
+  
+    .reg-form {
+      width: 288px;
+      height: 466px;
+      padding: 24px 16px;
+  
+      .reg-inputs {
+        .reg-container {
+          height: 88px;
+  
+            .reg-label {
+              font-size: 12px;
+              line-height: 1.33;
+            }
+        }
+      }
+      
+      .reg-btn {
+        height: 40px;
+        padding: 11px 64px;
+        font-size: 12px;
+        line-height: 1.5;
+        margin-top: 2px;
+      }
+  
+      .reg-enter {
+        font-size: 15px;
+        line-height: 1.33;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+
+        span {
+          display: flex;
+          flex-direction: row;
+          gap: 15px;
+
+          .reg-login {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-left: 0px;
+          }
+        }
+      }
+    }
+  }
+}
+
 

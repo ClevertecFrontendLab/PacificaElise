@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Navigate } from 'react-router-dom';
@@ -17,15 +17,15 @@ export const LogIn = () => {
   const [toggleIcon, setToggleIcon] = useState(<ClosedEye/>);
   const [type, setType] = useState('password');
   const [eye, setEye] = useState(false);
+  const [errIdenty, setErrIdenty] = useState(false);
+  const [emptyIdenty, setEmptyIdenty] = useState('');
+  const [errPassw, setErrPassw] = useState(false);
+  const [emptyPassw, setEmptyPassw] = useState('');
 
-  const { register, formState: {errors, isValid}, setFocus, handleSubmit } = useForm({
+  const { register, formState: {errors, isValid}, handleSubmit } = useForm({
     mode: 'all'
     }
   );
-
-  useEffect(() => {
-    setFocus('identifier');
-  }, []);
 
   const onSubmit = async (values) => {
     localStorage.clear();
@@ -101,18 +101,24 @@ export const LogIn = () => {
               </div>
               <div className='login-inputs'>
                 <div className='login-container'>
-                  <input className={(errors.identifier?.type === 'required' || errorAuth?.includes('400')) ? 'login-input-warn' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})}/>
-                  <label htmlFor='identifier' className='login-label'>Логин</label>  
-                  <span className='error' data-test-id='hint'>{errors.identifier?.message}</span>
-                </div> 
+                  <input className={((errIdenty===true && emptyIdenty === '') || errorAuth?.includes('400')) ? 'login-input-warn' : 'login-input'} id='identifier' type='text' required='required' {...register('identifier', {required: 'Поле не может быть пустым'})} onBlur={(e)=>{setErrIdenty(true); setEmptyIdenty(e.target.value)}} onFocus={()=>setErrIdenty(false)}/>
+                  <label htmlFor='identifier' className='login-label'>Логин</label> 
+                  {(errIdenty===true && emptyIdenty === '') ?
+                    <span className='error' data-test-id='hint'>Поле не может быть пустым</span> : 
+                      null
+                    }                
+                </div>                
                 <div className='login-container'>
-                  <input className={(errors.password?.type === 'required' || errorAuth?.includes('400')) ? 'login-input-warn' : 'login-input'} id='password' type={type} required='required' 
+                  <input className={((errIdenty===true && emptyIdenty === '') || errorAuth?.includes('400')) ? 'login-input-warn' : 'login-input'} id='password' type={type} required='required' 
                   {...register('password', {required: 'Поле не может быть пустым'})}
-                  onFocus={() => setEye(true)}/>
+                  onBlur={(e)=>{setErrPassw(true); setEmptyPassw(e.target.value)}} onFocus={()=>{setErrPassw(false); setEye(true)}}/>
                   <label htmlFor='password' className='login-label'>Пароль</label>
                   {eye ? <button type='button' className='eye-icon' data-test-id={type === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassInput}>{toggleIcon}</button> : null}
-                  <span className='error' data-test-id='hint'>{errors.password?.message}</span>
-                  {errorAuth?.includes('400') ?
+                  {(errPassw===true && emptyPassw === '') ?
+                    <span className='error' data-test-id='hint'>Поле не может быть пустым</span> : 
+                      null
+                    }                   
+                    {errorAuth?.includes('400') ?
                     <div className='login-error-message'>
                       <span className='restore-password warn' data-test-id='hint'>Неверный логин или пароль!</span>
                       <NavLink to='/forgot-pass' className='restore-password'>Восстановить?</NavLink>

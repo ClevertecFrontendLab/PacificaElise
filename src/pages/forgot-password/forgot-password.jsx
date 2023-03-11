@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {useEffect} from 'react';
+import {useState} from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Navigate } from 'react-router-dom';
@@ -17,23 +17,20 @@ export const ForgotPassword = () => {
   const {errorForgotPass, statusForgotPass} = useSelector(selectForgotPassInfo);
   const isAuth = useSelector(selectIsAuth);
   const isStorage = useSelector(selectIsStorage);
+  const [errEmail, setErrEmail] = useState(false);
+  const [emptyEmail, setEmptyEmail] = useState('');
 
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
-    setFocus
   } = useForm({
     mode: 'all',
     criteriaMode: "all",
     resolver: yupResolver(ForgotpassSchema),
   }
   );
-
-  useEffect(() => {
-    setFocus('email');
-  }, []);
 
   if (isStorage) {
     return <Navigate to='/auth'/>
@@ -95,10 +92,12 @@ export const ForgotPassword = () => {
             </div>
             <div className='forgotpass-inputs'>  
               <div htmlFor='email' className='forgotpass-container'> 
-                <input className={(errors.email?.type === 'required' || errorForgotPass) ? 'forgotpass-input-warn' : 'forgotpass-input'} id='email' type='text' required='required' 
-                {...register('email')}/>
+                <input className={((errEmail===true && emptyEmail === '') || errorForgotPass) ? 'forgotpass-input-warn' : 'forgotpass-input'} id='email' type='text' required='required' 
+                {...register('email')} onBlur={(e)=>{setErrEmail(true); setEmptyEmail(e.target.value)}} onFocus={()=>setErrEmail(false)}/>
                 <label htmlFor='email' className='forgotpass-label'>Email</label>
-                {errorForgotPass ? <span data-test-id='hint' className='error'>error</span> : <span data-test-id='hint' className='error'>{errors.email?.message}</span>}
+                {errorForgotPass ? <span data-test-id='hint' className='error'>error</span> : (errEmail===true && emptyEmail === '') ? <span data-test-id='hint' className='error'>Поле не может быть пустым</span> :
+                errors.email?.message &&
+                <span data-test-id='hint' className='error'>{errors.email?.message}</span>}
                 <span>На это email будет отправлено письмо с инструкциями по восстановлению пароля</span>
               </div>   
             </div>           

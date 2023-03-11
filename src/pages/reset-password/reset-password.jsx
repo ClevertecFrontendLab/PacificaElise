@@ -23,6 +23,10 @@ export const ResetPassword = () => {
   const [typeConfirm, setTypeConfirm] = useState('password');
   const [eye, setEye] = useState(false);
   const [eyeConfirm, setEyeConfirm] = useState(false);
+  const [errPass, setErrPass] = useState(false);
+  const [errPassConfirm, setErrPassConfirm] = useState(false);
+  const [emptyPass, setEmptyPass] = useState('');
+  const [emptyPassConfirm, setEmptyPassConfirm] = useState('');
   
   const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
@@ -119,31 +123,39 @@ export const ResetPassword = () => {
               <h2 className='reset-pass-title'>Восстановление пароля</h2>
             </div>
             <div className='reset-pass-inputs'>  
-            <div className='reset-pass-container'>
-              <input className={errors.password?.type === 'required' ? 'reset-pass-input-warn' : 'reset-pass-input'} id='password' type={type} required='required' 
-              {...register("password")} onFocus={() => setEye(true)}/>
-              <label htmlFor='password' className='reset-pass-label'>Пароль</label>
-              {eye ? <button type='button' className='eye-icon'  data-test-id={type === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassInput}>{toggleIcon}</button> : null}
-              {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check data-test-id='checkmark'/></p>}
-              {errors.password?.type === 'required' ? 
-              <span className='error-span'><span data-test-id='hint' className='hightlight'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
-              </span> :
-                errors.password?.message ? 
-                <span className='error-span'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
-                <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и 
-                <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span> : 
-                <span className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
-                }
+              <div className='reset-pass-container'>
+                  <input className={(errPass===true && emptyPass === '') ? 'reset-pass-input-warn' : 'reset-pass-input'} id='password' type={type} required='required'
+                  {...register('password')} onBlur={(e)=>{setErrPass(true); setEmptyPass(e.target.value)}} onFocus={()=>{setErrPass(false); setEye(true)}} />
+                  <label htmlFor='password' className='reset-pass-label'>Пароль</label>
+                  {eye ? <button type='button' className='eye-icon'  data-test-id={type === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassInput}>{toggleIcon}</button> : null}
+                  {(!getFieldState('password').invalid && getFieldState('password').isDirty) && <p className='check-icon'><Check data-test-id='checkmark'/></p>}
+                  {(errPass===true && emptyPass === '') ?
+                    <span className='error' data-test-id='hint'>Поле не может быть пустым</span> : 
+                    errors.password?.message ? 
+                      (errPass===false ?
+                        (errors.password?.type === 'required' ? <span data-test-id='hint' className='error-span'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span> :                          
+                        <span className='error-span' data-test-id='hint'>Пароль <span data-test-id='hint' className={errors.password?.types?.min === 'не менее 8 символов' && 'hightlight'}>не менее 8 символов</span>, 
+                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'с заглавной буквой') && 'hightlight'}>с заглавной буквой</span> и 
+                    <span data-test-id='hint' className={(errors.password?.types.matches?.toString().includes('буквой,цифрой') || errors.password?.types?.matches === 'цифрой') && 'hightlight'}>цифрой</span></span>
+                        ) :
+                          ((errPass===true && emptyPass !== '' && getFieldState('password').invalid) ? <span data-test-id='hint' className='error'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span> :
+                          <span className='error-span' data-test-id='hint'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>)
+                          ) :
+                      <span className='error-span' data-test-id='hint'>Пароль не менее 8 символов, с заглавной буквой и цифрой</span>
+                    }
               </div>
               <div className='reset-pass-container'>
-                  <input className={(errors.passwordConfirmation?.type === 'required' || errors.passwordConfirmation?.type === 'oneOf') ? 'reset-pass-input-warn' : 'reset-pass-input'} id='passwordConfirmation' type={typeConfirm} required='required' 
-                  {...register("passwordConfirmation")} onFocus={() => setEyeConfirm(true)}/>
+                  <input className={((errPassConfirm===true && emptyPassConfirm === '') || errors.passwordConfirmation?.type === 'oneOf') ? 'reset-pass-input-warn' : 'reset-pass-input'} id='passwordConfirmation' type={typeConfirm} required='required' 
+                  {...register("passwordConfirmation")} onBlur={(e)=>{setErrPassConfirm(true); setEmptyPassConfirm(e.target.value)}} onFocus={()=>{setErrPassConfirm(false); setEyeConfirm(true)}}/>
                   <label htmlFor='passwordConfirmation' className='reset-pass-label'>Повторите пароль</label>
                   {eyeConfirm ? <button type='button' className='eye-icon' data-test-id={typeConfirm === 'password' ? 'eye-closed' : 'eye-opened'} onClick={togglePassConfirmInput}>{toggleIconConfirm}</button> : null}
-                  {errors.passwordConfirmation?.type === 'oneOf' && <span className='error-span'><span className='hightlight' data-test-id='hint'>Пароли не совпадают</span></span> }
+                  {(errPassConfirm===true && emptyPassConfirm === '') ? <span className='error-span'><span className='hightlight' data-test-id='hint'>Поле не может быть пустым</span></span> :
+                    (errPassConfirm===true && emptyPassConfirm !== '') ? (errors.passwordConfirmation?.type === 'oneOf') && <span className='error-span'><span className='hightlight' data-test-id='hint'>Пароли не совпадают</span></span> :
+                    null
+                  }
               </div>
             </div>           
-            <button className='reset-pass-btn' disabled={getFieldState('passwordConfirmation').invalid} type='submit'>сохранить изменения</button>
+            <button className='reset-pass-btn' disabled={getFieldState('passwordConfirmation').invalid && errPassConfirm} type='submit'>сохранить изменения</button>
             <p className='reset-pass-enter'>После сохранения войдите в библиотеку, используя новый пароль</p>
           </form>
         </div>
