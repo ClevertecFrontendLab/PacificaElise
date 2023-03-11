@@ -9,6 +9,7 @@ import {setToogleErrorToast} from '../../features/toggle-error-toast/toggle-erro
 import {ReactComponent as Arrow} from '../../imgs/icons/arrow.svg';
 
 import './sidebar.scss';
+import { selectIsStorage } from '../../features/auth/auth-slice';
 
 export const Sidebar = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ export const Sidebar = () => {
   const {path} = useSelector(selectControls);
   const {statusCat, errorCat, qty} = useSelector(selectCategoriesInfo);
   const {error, status} = useSelector(selectBooksInfo);
+  const isStorage = useSelector(selectIsStorage);
 
   const [dropdown, setDropdown] = useState(true);
 
@@ -27,10 +29,10 @@ export const Sidebar = () => {
   }
 
   useEffect(() => {
-    if (!qty) {
+    if (!qty && isStorage) {
       dispatch(loadCategories()); 
     };
-  }, [qty, dispatch]);
+  }, [qty, isStorage, dispatch]);
 
 
   useEffect(() => {

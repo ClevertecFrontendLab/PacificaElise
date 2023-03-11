@@ -1,8 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
-
-// import Lottie from 'lottie-react';
-// import animationData from '../../lotties/loader.json';
+import { Outlet, Navigate } from 'react-router-dom';
 
 import { Header } from '../header/header';
 import { Footer } from '../footer/footer';
@@ -13,19 +10,17 @@ import { selectDetailsInfo } from '../../features/details/details-slice';
 
 import './layout.scss';
 import { selectCategoriesInfo } from '../../features/categories/categories-slice';
+import { selectIsAuth } from '../../features/auth/auth-slice';
 
 export const Layout = () => {
 const {status, error} = useSelector(selectBooksInfo);
 const {statusBookId} = useSelector(selectDetailsInfo);
 const {statusCat, errorCat} = useSelector(selectCategoriesInfo);
+const isAuth = useSelector(selectIsAuth);
 
-/* 
-const defaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData,
-};
-*/
+if (!isAuth) {
+  return <Navigate to='/auth'/>
+}
 
 return (
   <div className='loader-wrapper'>
@@ -52,7 +47,7 @@ return (
         null
       }
     <div className={status === 'loading' || statusBookId === 'loading' || statusCat === 'loading' ? 'blur' : 'layout-wrapper'}>
-    <div  className='layout-container'>
+      <div  className='layout-container'>
         <Header />
         {(error !== null || errorCat !== null && (status !== 'loading' || statusCat !== 'loading')) && <ErrorToast /> }
           <Outlet />
@@ -63,7 +58,3 @@ return (
   )
 };
 
-
-/* <Lottie className='lottie'
-            options={defaultOptions}
-          /> */

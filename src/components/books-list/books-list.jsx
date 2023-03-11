@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { selectIsStorage } from '../../features/auth/auth-slice';
 import { loadBooks, selectVisibleBooks, selectBooksInfo } from '../../features/books/books-slice';
 import { selectCategoriesInfo } from '../../features/categories/categories-slice';
 import { selectControls, selectField, selectSort } from '../../features/controls/controls-slice';
@@ -16,12 +18,13 @@ export const BooksList = () => {
   const {status, qty} = useSelector(selectBooksInfo);
   const {statusCat} = useSelector(selectCategoriesInfo);
   const [choosenView, setChoosenView] = useState();
+  const isStorage = useSelector(selectIsStorage);
 
   useEffect(() => {
-    if (!qty) {
+    if (isStorage) {
     dispatch(loadBooks())
     };
-  }, [qty, dispatch]);
+  }, [isStorage, dispatch]);
 
   function sorting (sorted, value) {
     if (sorted === 'desc') {
@@ -58,9 +61,6 @@ export const BooksList = () => {
         null
       }
       </section>
-      
-      
-    
-  )
+    )
 };
 
